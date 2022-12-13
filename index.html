@@ -2,17 +2,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>AjaxAvailabilityCalendar.com - Version 4.01.01 - Demo</title>
+		<title>AjaxAvailabilityCalendar.com - Version 4.01.02 - Demo</title>
 
 		<link rel="stylesheet" href="demo.css?v=3">
-				<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-734243-28"></script>
-		<script>
-		  window.dataLayer = window.dataLayer || [];
-		  function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date());
-		  gtag('config', 'UA-734243-28');
-		</script>
+		
 		<script src="ac-assets/ac-calendar.js?v=4.514" id="ac-cal" ac-container="demo-calendar" ac-item="1"  ac-lang="es"  ac-dateStart="date-start" ac-dateEnd="date-end"></script>
 	</head>
 	<body>
@@ -24,61 +17,13 @@
 					</div>
 					
 				</header>
-				<h1>Development version 4.01.01</h1>
+				<h1>Development version 4.01.02</h1>
 				<div id="demo-calendar" style="">The calendar will load into this space.</div>
-				<h2>Send dates to a separate reservation form on your page:</h2>
 				<div id="block-booking" style="margin-top:10px;">
 					<input type="date" id="date-start" value="" readonly="readonly" style="border:1px solid #CCC;  border-radius:5px; padding:5px 10px; font-size:1.4em; margin-right:5px;">
 					<input type="date" id="date-end" value="" 	readonly="readonly" style="border:1px solid #CCC;  border-radius:5px; padding:5px 10px; font-size:1.4em; margin-right:5px;">
 					<input type="submit" value="submit" 		disabled="disabled" style="border:1px solid #CCC;  border-radius:5px; padding:5px 10px; font-size:1.4em; margin-right:5px;">
 				</div>
-				<h2>Front-end features:</h2>
-				<ul class="checklist">
-					<li>Simple installation - the calendar is loaded by a single line of JavaScript (see below)</li>
-					<li>Interactive date range selection to send dates to your reservations form if required.</li>
-					<li>Self-contained with no external dependencies.</li>
-					<li>No external dependencies or JavaScript libraries.</li>
-					<li>Does not use images or sprites.</li>
-					<li>Simple CSS - colors can be defined via admin panel.</li>
-					<li>Responsive:
-						<ul class="checklist">
-							<li>The code automatically calculates the number of months to show according to the browser window width. (You can override this by defining this manually to show the number of months that you want)</li>
-							<li>On window resize the code will re-calculate the number of months, remembering the first month currently defined.</li> 
-						</ul>
-					</li>					
-				</ul>
-				<h2>Admin features</h2>
-				<ul class="checklist">
-					<li>Reduced Vanilla JavaScript (no libraries).</li>
-					<li>Interactive styling tool to define the calendar design & colors.</li>
-					<li>Date range selection to mark dates as unavailable and save basic booking data (optional).</li>
-					<li>Unlimited admin users.</li>
-					<li>Unlimited number of calendar items.</li>
-					<li>Unlimited languages.</li>
-					<li>Language translations stored in the database as opposed to external files.</li>
-					<li>Password reminder via email.</li>
-				</ul>
-				
-				<h2>How to implement the calendar</h2>
-				<ol>
-					<li>Add JavaScript tag</li>
-					<li>Add parameters to script tag:
-						<ul>
-							<li><strong>ac-container</strong> <span style="color:red;">[required]</span> : ID of DOM element where calendar is to be loaded.</li>
-							<li><strong>ac-item</strong>  <span style="color:green;">[optional - default first item in db]</span> : ID of calendar item to show availability.</li>
-							<li><strong>ac-lang</strong> <span style="color:green;">[optional - default "en"]</span> : language to show calendar. <!-- <b>-- DFAULT SHOULD BE AS PER ADMIN</b> --></li>
-							<li><strong>ac-months</strong> <span style="color:green;">[optional - default "0"]</span> : fixed number of months to show.  Default will be responsive<!--  <b>-- MOVE TO SETTINGS</b> --></li>
-							<li><strong>ac-width</strong> <span style="color:green;">[optional - default "300"]</span> : minimum width of each month. <!-- <b>-- MOVE TO SETTINGS</b> --></li>
-							<li><strong>ac-dateStart</strong> <span style="color:green;">[optional]</span> :ID of the start date form field in your reservations form.</li>
-							<li><strong>ac-dateEnd</strong> <span style="color:green;">[optional]</span> : ID of the end date form field in your reservations form.</li>
-						</ul>
-					</li>
-				</ol>
-				<h2>Single line of code to include the calendar:</h2>
-				<pre>
-	&lt;script src="ac-assets/ac-functions.js" id="ac-cal" <strong>ac-container</strong>="my-calendar">&lt;/script>
-	<!-- <strong>ac-item</strong>="1" <strong>ac-dateStart</strong>="date-from" <strong>ac-dateEnd</strong>="date-to" -->
-				</pre>
 			</main>
 			<footer>
 				<ul>
