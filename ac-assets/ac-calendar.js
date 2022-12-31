@@ -98,16 +98,21 @@ const reloadOnResize = function () {
   }
 };
 
-//var cl_weekDayTitlesEl 	= weekDayTitlesEl.cloneNode(true)
-
 // FETCH calendar settings
 async function getSettings() {
   try {
-    let res = await fetch(urlSettings + "?lang=" + acLang);
-    settings = await res.json();
+    const paramsString = `?lang=${acLang}`;
+    const searchParams = new URLSearchParams(paramsString);
+    const response = await fetch(urlSettings + searchParams);
+    settings = await response.json();
+
+    defineSettings(settings);
   } catch (error) {
-    console.log(error);
+    console.log("unable to load settings");
   }
+}
+
+function defineSettings(settings) {
   // define texts
   txtToday = settings.texts["today"];
   txtBack = settings.texts["back"];
@@ -210,6 +215,7 @@ const buildCalendarWrapper = function () {
   addNavEl.append(acNavBackEl);
   addNavEl.append(acNavLoadingEl);
   addNavEl.append(acNavNextEl);
+  º;
   acContainer.append(addNavEl);
   acContainer.append(acNumMonthsEl);
   acWrapper.append(acContainer);
