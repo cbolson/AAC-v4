@@ -22,3 +22,5 @@ export function debounce(func, time) {
     timer = setTimeout(func, time, event);
   };
 }
+export const addStyles = (node, styles) =>
+  Object.keys(styles).forEach((key) => (node.style[key] = styles[key]));

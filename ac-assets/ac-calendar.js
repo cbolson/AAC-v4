@@ -8,7 +8,13 @@ Use			: 	All javascript calendar functions
 */
 
 // import utils
-import { createEl, addClass, showSpinner, debounce } from "./_utils.js";
+import {
+  createEl,
+  addClass,
+  showSpinner,
+  debounce,
+  addStyles,
+} from "./_utils.js";
 
 // define current url
 // this gets the current directory and adds the path to the ajax file.
@@ -22,8 +28,8 @@ const urlCurrent =
 /* DON'T CHANGE ANYTHING BELOW HERE UNLESS YOU KNOW WHAT YOU ARE DOING */
 
 // define ajax urls
-const urlCal = urlCurrent + "ac-ajax/calendar.ajax.php";
-const urlSettings = urlCurrent + "ac-ajax/settings.ajax.php";
+const urlCal = urlCurrent + "ac-ajax/calendar.ajax.php?";
+const urlSettings = urlCurrent + "ac-ajax/settings.ajax.php?";
 
 // get calemdar JS script element ID to retrive parameters
 const acCal = document.querySelector("#ac-cal");
@@ -99,20 +105,38 @@ const reloadOnResize = function () {
 };
 
 // FETCH calendar settings
-async function getSettings() {
-  try {
-    const paramsString = `?lang=${acLang}`;
-    const searchParams = new URLSearchParams(paramsString);
-    const response = await fetch(urlSettings + searchParams);
-    settings = await response.json();
+(async function getSettings() {
+  const paramsString = `lang=${acLang}`;
+  const searchParams = new URLSearchParams(paramsString);
+  const response = await fetch(urlSettings + searchParams);
+  const settings = await response.json();
 
-    defineSettings(settings);
-  } catch (error) {
-    console.log("unable to load settings");
-  }
+  defineSettings(settings);
+})();
+
+// insert error message into dom
+function displayError({ msg, code }) {
+  const acWrapper = document.querySelector(`#${acWrapperID}`);
+
+  const msgEl = createEl("div");
+  addStyles(msgEl, {
+    border: "1px solid red",
+    padding: ".5em 1em",
+    backgroundColor: "#fce2e2",
+    borderRadius: ".25rem",
+    marginBlock: ".25rem",
+  });
+
+  msgEl.innerHTML = `error ${code}: ${msg}`;
+
+  acWrapper.append(msgEl);
 }
 
 function defineSettings(settings) {
+  if (settings.error) {
+    return displayError(settings.error);
+  }
+
   // define texts
   txtToday = settings.texts["today"];
   txtBack = settings.texts["back"];
@@ -150,7 +174,7 @@ const renderHeader = function () {
   link.id = "ac-stylesheet";
   link.rel = "stylesheet";
   link.type = "text/css";
-  link.href = "" + urlCurrent + "ac-assets/ac-style.css?" + Date.now() + "";
+  link.href = "" + urlCurrent + "ac-assets/ac-style.css?" + Date.now() + "&v=2";
   $head.appendChild(style);
   $head.appendChild(link);
 
@@ -573,7 +597,7 @@ document.addEventListener("DOMContentLoaded", function () {
   isMobile = deviceDetect();
 
   // load calender settings and add styles to head then finally initialize the calendar
-  getSettings();
+  //getSettings();
 
   // detect window resize and call reloadOnResize function
   window.addEventListener("resize", debounce(reloadOnResize, 150));
