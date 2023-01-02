@@ -37,6 +37,11 @@
   color: #fce2e2;
   padding: 1rem 2rem;
 }
+.ac-alert--info {
+  border-color: #ccc;
+  background-color: rgb(245, 245, 203);
+  color: #333;
+}
 #ac-container {
   margin: 0 auto;
 }

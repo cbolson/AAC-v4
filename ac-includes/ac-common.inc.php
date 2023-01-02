@@ -51,12 +51,9 @@ SELECT
 FROM 
 	".AC_TBL_CONFIG."
 ";
-if(!$res=mysqli_query($db_cal,$sql)){
-	 if($is_ajax)	returnError('1.01',"calendar database tables not created");
-	 else 			die("KO-db-not-created");
-}else{
-	$row_config=mysqli_fetch_assoc($res);
-}
+$res=mysqli_query($db_cal,$sql) or returnError('1.03',"calendar database tables not created<br>".mysqli_error($db_cal));
+$row_config=mysqli_fetch_assoc($res);
+
 
 //	define  constants
 define("AC_URL"		, "".$row_config["cal_url"]);
@@ -112,7 +109,6 @@ if($inc_languages){
 	if(isset($_REQUEST["lang"])) 	$cur_lang=$_REQUEST["lang"];
 	else 							$cur_lang=AC_DEFAULT_LANG;
 	
-	
 	// define language to use BEFORE other includes but AFTER common file incase we need default language
 	if(isset($_SESSION["admin"]["lang"]))	define("AC_LANG", $_SESSION["admin"]["lang"]);
 	else 									define("AC_LANG", AC_DEFAULT_LANG);
@@ -130,7 +126,6 @@ if($inc_languages){
 		l.state=1
 	ORDER BY lt.txt ASC
 	";
-	//echo $sql;
 	$res=mysqli_query($db_cal,$sql) or die("Error - languages");
 	while($row=mysqli_fetch_assoc($res)){
 		$ac_languages[$row["code"]]=$row["txt"];
@@ -154,7 +149,7 @@ if($inc_functions){
 
 // define error codes for admin
 $error_codes=array();
-$error_codes["1.01"]= array(
+$error_codes["1.03"]= array(
 	"issue"	=> "Calendar database tables have not been created",
 	"fix"	=> "Check database connection data and run the install script if required"
 );

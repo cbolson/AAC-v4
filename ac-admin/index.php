@@ -116,10 +116,10 @@ if(isset($msg)){
 // block - contents
 if(!empty($contents)){
 	$block_contents='
-	<main>
+	<section>
 		'.$block_title.'
 		'.$contents.'
-	</main>
+	</section>
 	';
 }
 // block - extra js code
@@ -151,13 +151,15 @@ echo '
 		<link rel="stylesheet" href="assets/admin.css?v='.time().'">
 	</head>
 	<body id="'.$body_id.'">
-		<header>
+		 <main>
+			<header class="header">
 			<div id="logo"><img src="'.AC_LOGO.'" title="Availability Calendar - Admin" width="300"></div>
 			'.$block_nav.'
 		</header>
 		'.$block_msg.'
 		'.$block_contents.'
 		'.$block_footer.'
+	</main>
 		<script defer src="assets/svgxuse.min.js"></script>
 		<script defer src="assets/ac-functions.js?'.time().'"></script>
 		'.$xtra_js_files.'

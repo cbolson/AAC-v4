@@ -1,37 +1,29 @@
 /*
 Script		:	Ajax availability calendar www.ajaxavailabilitycalendar.com
-Wuthor		: 	Chris Bolson www.cbolson.com
+Wuthor		: Chris Bolson www.cbolson.com
 
-File		: 	ac-calendar.js
-Date		: 	2021-10-13
-Use			: 	All javascript calendar functions
+File		  : ac-functions.inc.js
+Date add	: 2021-10-13
+Date mod  : 2023-01-02
+Use			  : All javascript calendar functions
 */
 
 // import utils
-import {
-  createEl,
-  addClass,
-  showSpinner,
-  debounce,
-  addStyles,
-} from "./_utils.js";
+import { createEl, addClass, debounce, addStyles } from "./_utils.js";
 
 // define current url
 // this gets the current directory and adds the path to the ajax file.
-// var urlRoot is set in admin where we are loading the calendar - if not defined (ie font-end cal) use cuttent base url as assets are relative to this
-const urlCurrent =
-  typeof urlRoot != "undefined" ? urlRoot : window.location.href;
+// var urlRoot is set in admin where we are loading the calendar - if not defined (ie font-end cal) use current base url as assets are relative to this
+const urlCurrent = typeof urlRoot != "undefined" ? urlRoot : "";
 
 // alternative manual method - replace "_calendar_url_" with your calendar url
 //const urlCurrent = typeof(urlRoot) != 'undefined' ? urlRoot : "_calendar_url_/ac-ajax/calendar.ajax.php";
 
-/* DON'T CHANGE ANYTHING BELOW HERE UNLESS YOU KNOW WHAT YOU ARE DOING */
-
 // define ajax urls
-const urlCal = urlCurrent + "ac-ajax/calendar.ajax.php?";
-const urlSettings = urlCurrent + "ac-ajax/settings.ajax.php?";
+const urlCal = `${urlCurrent}ac-ajax/calendar.ajax.php?`;
+const urlSettings = `${urlCurrent}ac-ajax/settings.ajax.php?`;
 
-// get calemdar JS script element ID to retrive parameters
+// get calendar JS script element ID to retrieve parameters
 const acCal = document.querySelector("#ac-cal");
 
 // define script variables as defined in script tag or defaults
@@ -59,19 +51,19 @@ const acDateEnd = acCal.getAttribute("ac-dateEnd")
 
 //
 let direction = "today"; // start calendar on current month
-let isMobile = false; //i nitiate as false
+let isMobile = false; // initiate as false
 let acStartDate = ""; // empty for initial load, will be overwritten once calendar has loaded
 
 // admin defined settings (over written below)
-let txtToday = "Today"; // define but will be overwritten by data from ajax file
-let minNightsAllowed = 0;
-let txtMinNights = "_min_nights_";
-let txtDateEendKO = "_end date before start date_";
-let txtDatesNotAvailable = "_dates_not_available_";
-
-// spinner to show months loading - shown in middle of nav - 100% css
-const acSpinner =
-  '<div class="ac-spinner"><div></div><div></div><div></div><div></div></div>';
+let settings,
+  minNightsAllowed = 0;
+let acWrapper, acNavLoadingEl, acNumMonthsEl, acNumMonthsElTmp;
+let txtToday,
+  txtBack,
+  txtNext,
+  txtDatesNotAvailable,
+  txtMinNights,
+  txtDateEendKO;
 
 // create common elements once then CLONE in loops (not 100% convinced that this method saves time)
 const newMonthEl = createEl("div");
@@ -79,6 +71,13 @@ const monthTitleEl = createEl("h2");
 const weekDayTitlesEl = createEl("ul");
 const weekDaysNumbersEl = createEl("ul");
 const weekDayEl = createEl("li");
+const acSpinner =
+  '<div class="ac-spinner"><div></div><div></div><div></div><div></div></div>';
+
+// add classes to common elements
+addClass(newMonthEl, "ac-month");
+addClass(weekDayTitlesEl, "ac-day-title");
+addClass(weekDaysNumbersEl, "ac-days");
 
 let fieldDateStart = "";
 let fieldDateEnd = "";
@@ -88,36 +87,9 @@ if (acDateStart) {
   datesActive = true;
 }
 
-// add classes to common elements
-addClass(newMonthEl, "ac-month");
-addClass(weekDayTitlesEl, "ac-day-title");
-addClass(weekDaysNumbersEl, "ac-days");
-
-// recreate calendar on window resize - will remember selected first month even if it is not current month
-const reloadOnResize = function () {
-  // NOT on mobiles as they resize automatically on scroll to remove the header bar
-  if (!isMobile) {
-    // recalculate number of months we can show accoring to window size
-    acNumMonthsElTmp = monthsToSHow();
-    // initiate calendar
-    loadCal("current");
-  }
-};
-
-// FETCH calendar settings
-(async function getSettings() {
-  const paramsString = `lang=${acLang}`;
-  const searchParams = new URLSearchParams(paramsString);
-  const response = await fetch(urlSettings + searchParams);
-  const settings = await response.json();
-
-  defineSettings(settings);
-})();
-
 // insert error message into dom
 function displayError({ msg, code }) {
   const acWrapper = document.querySelector(`#${acWrapperID}`);
-
   const msgEl = createEl("div");
   addStyles(msgEl, {
     border: "1px solid red",
@@ -126,11 +98,25 @@ function displayError({ msg, code }) {
     borderRadius: ".25rem",
     marginBlock: ".25rem",
   });
-
   msgEl.innerHTML = `error ${code}: ${msg}`;
-
   acWrapper.append(msgEl);
 }
+
+// show spinner or "today" text
+function showSpinner(show) {
+  if (show) acNavLoadingEl.innerHTML = acSpinner;
+  else acNavLoadingEl.innerHTML = txtToday;
+}
+
+// FETCH calendar settings (IIEF)
+(async function () {
+  const paramsString = `lang=${acLang}`;
+  const searchParams = new URLSearchParams(paramsString);
+  const response = await fetch(urlSettings + searchParams);
+  settings = await response.json();
+
+  defineSettings(settings);
+})();
 
 function defineSettings(settings) {
   if (settings.error) {
@@ -200,26 +186,25 @@ const buildCalendarWrapper = function () {
   acWrapper = document.querySelector(`#${acWrapperID}`);
 
   // element -  wrapper
-  acContainer = createEl("div");
+  const acContainer = createEl("div");
   acContainer.setAttribute("id", "ac-container");
 
   // element - nav
-  var addNavEl = createEl("ul");
+  const addNavEl = createEl("ul");
   addNavEl.setAttribute("id", "ac-nav");
 
   // element - nav[back]
-  acNavBackEl = createEl("li");
+  const acNavBackEl = createEl("li");
   acNavBackEl.classList.add("ac-nav-bt", "back");
   acNavBackEl.setAttribute("data-direction", "back");
   acNavBackEl.setAttribute("title", "" + txtBack + "");
   acNavBackEl.innerHTML = "&#x276E;"; // <
 
   // element -  nav[next]
-  acNavNextEl = createEl("li");
+  const acNavNextEl = createEl("li");
   acNavNextEl.classList.add("ac-nav-bt", "next");
   acNavNextEl.setAttribute("data-direction", "next");
   acNavNextEl.setAttribute("title", "" + txtNext + "");
-
   acNavNextEl.innerHTML = "&#x276F;"; // >
 
   // element - loader (today & spinner)
@@ -239,7 +224,7 @@ const buildCalendarWrapper = function () {
   addNavEl.append(acNavBackEl);
   addNavEl.append(acNavLoadingEl);
   addNavEl.append(acNavNextEl);
-  º;
+
   acContainer.append(addNavEl);
   acContainer.append(acNumMonthsEl);
   acWrapper.append(acContainer);
@@ -250,7 +235,7 @@ const buildCalendarWrapper = function () {
   if (acDateStart) {
     // define date field elements (these field ids are external to the calendar script)
     fieldDateStart = document.querySelector(`#${acDateStart}`);
-    fieldDateEnd = document.querySelector(`#${acDateEn}`);
+    fieldDateEnd = document.querySelector(`#${acDateEnd}`);
   }
 
   // add nav controls to newly created nav eleemtns
@@ -279,7 +264,7 @@ var monthsToSHow = function () {
   if (acNumMonthsElInit == 0) {
     // if number of months not defined
     // define number of months to show acording to parent width - not 100% sure this is a good idea yet
-    acWidth = acWrapper.clientWidth;
+    const acWidth = acWrapper.clientWidth;
     return Math.floor(acWidth / acMonthWidth);
   } else {
     return acNumMonthsElInit; // user defined
@@ -301,7 +286,7 @@ var drawCal = function (jsonObj) {
     let cl_monthTitleEl = monthTitleEl.cloneNode(true);
     cl_monthTitleEl.textContent = resMonths[i].month_title;
 
-    cl_weekDayTitlesEl = weekDayTitlesEl.cloneNode(true);
+    const cl_weekDayTitlesEl = weekDayTitlesEl.cloneNode(true);
 
     // week days
     let cl_weekDaysNumbersEl = weekDaysNumbersEl.cloneNode(true);
@@ -602,7 +587,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // detect window resize and call reloadOnResize function
   window.addEventListener("resize", debounce(reloadOnResize, 150));
 });
-
+// recreate calendar on window resize - will remember selected first month even if it is not current month
+const reloadOnResize = function () {
+  // NOT on mobiles as they resize automatically on scroll to remove the header bar
+  if (!isMobile) {
+    // recalculate number of months we can show accoring to window size
+    acNumMonthsElTmp = monthsToSHow();
+    // initiate calendar
+    loadCal("current");
+  }
+};
 /*
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 	  	var isMobile = true;

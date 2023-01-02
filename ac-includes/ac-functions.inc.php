@@ -436,7 +436,7 @@ if(!function_exists("getTextLocal")){
 			".$sql_cond."
 		LIMIT 1
 		";
-		//echo $sql;
+		echo $sql;
 		$res=mysqli_query($db_cal,$sql) or die("Error - text local");
 		if(mysqli_num_rows($res)==0){
 			$txt='_text_not_found_';
