@@ -15,7 +15,6 @@ import { createEl, addClass, debounce, addStyles } from "./_utils.js";
 // this gets the current directory and adds the path to the ajax file.
 // var urlRoot is set in admin where we are loading the calendar - if not defined (ie font-end cal) use current base url as assets are relative to this
 const urlCurrent = typeof urlRoot != "undefined" ? urlRoot : "";
-
 // alternative manual method - replace "_calendar_url_" with your calendar url
 //const urlCurrent = typeof(urlRoot) != 'undefined' ? urlRoot : "_calendar_url_/ac-ajax/calendar.ajax.php";
 
@@ -36,7 +35,7 @@ const acItemID = acCal.getAttribute("ac-item")
 const acLang = acCal.getAttribute("ac-lang")
   ? acCal.getAttribute("ac-lang")
   : "en"; // OPTIONAL (default en) - language to show calendar
-const acNumMonthsElInit = acCal.getAttribute("ac-months")
+const acNumMonthsInital = acCal.getAttribute("ac-months")
   ? acCal.getAttribute("ac-months")
   : 0; // OPTIONAL (default 0 for responsive) - number of months to show
 const acMonthWidth = acCal.getAttribute("ac-width")
@@ -53,11 +52,15 @@ const acDateEnd = acCal.getAttribute("ac-dateEnd")
 let direction = "today"; // start calendar on current month
 let isMobile = false; // initiate as false
 let acStartDate = ""; // empty for initial load, will be overwritten once calendar has loaded
+let fieldDateStart = "";
+let fieldDateEnd = "";
+let dateStartSet = false;
 
 // admin defined settings (over written below)
 let settings,
-  minNightsAllowed = 0;
-let acWrapper, acNavLoadingEl, acNumMonthsEl, acNumMonthsElTmp;
+  minNightsAllowed = 0,
+  startDate;
+let acWrapper, acNavLoadingEl, acNumMonthsEl, acNumMonthsElTmp, clickableDates;
 let txtToday,
   txtBack,
   txtNext,
@@ -78,14 +81,6 @@ const acSpinner =
 addClass(newMonthEl, "ac-month");
 addClass(weekDayTitlesEl, "ac-day-title");
 addClass(weekDaysNumbersEl, "ac-days");
-
-let fieldDateStart = "";
-let fieldDateEnd = "";
-let dateStartSet = false;
-let datesActive = false;
-if (acDateStart) {
-  datesActive = true;
-}
 
 // insert error message into dom
 function displayError({ msg, code }) {
@@ -108,7 +103,7 @@ function showSpinner(show) {
   else acNavLoadingEl.innerHTML = txtToday;
 }
 
-// FETCH calendar settings (IIEF)
+// FETCH calendar settings - this function will call as soon as the dom is ready
 (async function () {
   const paramsString = `lang=${acLang}`;
   const searchParams = new URLSearchParams(paramsString);
@@ -123,7 +118,7 @@ function defineSettings(settings) {
     return displayError(settings.error);
   }
 
-  // define texts
+  // define texts & settings
   txtToday = settings.texts["today"];
   txtBack = settings.texts["back"];
   txtNext = settings.texts["next"];
@@ -143,7 +138,7 @@ function defineSettings(settings) {
 
 // create header, fetch main colors from db and include style sheet
 const renderHeader = function () {
-  const $head = document.getElementsByTagName("HEAD")[0];
+  const head = document.getElementsByTagName("HEAD")[0];
   let styles = settings.styles;
 
   // define styles
@@ -154,15 +149,14 @@ const renderHeader = function () {
     cssStyles += newStyle;
   });
 
-  var style = createEl("style");
-  style.innerHTML = "#ac-container * {" + cssStyles + "}";
-  var link = createEl("link");
+  const styleSheet = createEl("style");
+  styleSheet.innerHTML = "#ac-container * {" + cssStyles + "}";
+  const link = createEl("link");
   link.id = "ac-stylesheet";
   link.rel = "stylesheet";
   link.type = "text/css";
   link.href = "" + urlCurrent + "ac-assets/ac-style.css?" + Date.now() + "&v=2";
-  $head.appendChild(style);
-  $head.appendChild(link);
+  head.append(styleSheet, link);
 
   if (isMobile) {
     // check if viewport is defined
@@ -205,7 +199,7 @@ const buildCalendarWrapper = function () {
   acNavNextEl.classList.add("ac-nav-bt", "next");
   acNavNextEl.setAttribute("data-direction", "next");
   acNavNextEl.setAttribute("title", "" + txtNext + "");
-  acNavNextEl.innerHTML = "&#x276F;"; // >
+  acNavNextEl.innerHTML = "&#x276F;"; // ">""
 
   // element - loader (today & spinner)
   acNavLoadingEl = createEl("li");
@@ -217,68 +211,254 @@ const buildCalendarWrapper = function () {
   acNumMonthsEl.setAttribute("id", "ac-months");
   acNumMonthsEl.innerHTML = '</div><div id="ac-months"></div>';
 
-  // remove any existing contents from caleder wrapper
+  // remove any existing contents from calendar wrapper
   acWrapper.innerHTML = "";
 
   // put elements together
-  addNavEl.append(acNavBackEl);
-  addNavEl.append(acNavLoadingEl);
-  addNavEl.append(acNavNextEl);
-
-  acContainer.append(addNavEl);
-  acContainer.append(acNumMonthsEl);
+  addNavEl.append(acNavBackEl, acNavLoadingEl, acNavNextEl);
+  acContainer.append(addNavEl, acNumMonthsEl);
   acWrapper.append(acContainer);
 
-  // define number of months to show according to screen widht - DO WE NEED TO DO THIS EVERY TIME ????
-  acNumMonthsElTmp = monthsToSHow();
-
-  if (acDateStart) {
-    // define date field elements (these field ids are external to the calendar script)
-    fieldDateStart = document.querySelector(`#${acDateStart}`);
-    fieldDateEnd = document.querySelector(`#${acDateEnd}`);
-  }
+  // define number of months to show according to screen width - DO WE NEED TO DO THIS EVERY TIME ????
+  acNumMonthsElTmp = monthsToShow();
 
   // add nav controls to newly created nav eleemtns
   addNavControls();
-
   // load calendar
   loadCal(direction);
 };
+
 // add calendar "back" and "next" button events
-var addNavControls = function () {
-  // add calendar nav events to newly create element
-  var acControls = document.getElementsByClassName("ac-nav-bt");
-  [].forEach.call(acControls, function (el) {
-    el.onclick = function () {
-      // console.log(`Direction ${this.getAttribute("data-direction")}`);
-      direction = this.getAttribute("data-direction");
-      // reload calendar
-      loadCal(direction);
+function addNavControls() {
+  var acControls = document.querySelectorAll("[data-direction]");
+  acControls.forEach((btn) => {
+    btn.onclick = function () {
+      loadCal(btn.getAttribute("data-direction"));
     };
   });
-};
+}
 
 // define how many months to show according to space OR user defined
-var monthsToSHow = function () {
+function monthsToShow() {
   // define number of months to show if not set
-  if (acNumMonthsElInit == 0) {
+  if (acNumMonthsInital == 0) {
     // if number of months not defined
     // define number of months to show acording to parent width - not 100% sure this is a good idea yet
     const acWidth = acWrapper.clientWidth;
     return Math.floor(acWidth / acMonthWidth);
   } else {
-    return acNumMonthsElInit; // user defined
+    return acNumMonthsInitial; // user defined
   }
+}
+
+var datediff = function (first, second) {
+  // Take the difference between the dates and divide by milliseconds per day.
+  // Round to nearest whole number to deal with DST.
+  return Math.round((second - first) / (1000 * 60 * 60 * 24));
 };
 
+// functions for interactive calendar when user has defined start and end date fields
+
+// make available dates clickable for bookings form date range selection
+function activateDates() {
+  if (acDateStart) {
+    // define date field elements (these field ids are external to the calendar script)
+    fieldDateStart = document.querySelector(`#${acDateStart}`);
+    fieldDateEnd = document.querySelector(`#${acDateEnd}`);
+
+    // get all items with update-state class
+    clickableDates = document.querySelectorAll(".available");
+    // add click event to state elements
+    clickableDates.forEach((d) => {
+      d.addEventListener("click", setDate);
+      d.addEventListener("mouseenter", highlightDates);
+    });
+  }
+}
+
+// dates selected not available
+function dateNotAvail(el) {
+  alert("" + txtDatesNotAvailable + "");
+  clearDates();
+}
+
+// remove date range select styles
+function clearRangeStyles(removeStartDate = true) {
+  if (removeStartDate) {
+    // remove all (reset)
+    clickableDates.forEach((d) => {
+      d.classList.remove(
+        "date-select-start",
+        "date-select-between",
+        "date-select-end",
+        "date-select-end-am"
+      );
+    });
+  } else {
+    // leave start date
+    clickableDates.forEach((d) => {
+      d.classList.remove(
+        "date-select-between",
+        "date-select-end",
+        "date-select-end-am"
+      );
+    });
+  }
+}
+// reset date range
+function clearDates() {
+  dateStartSet = false;
+  fieldDateStart.value = "";
+  fieldDateEnd.value = "";
+  clearRangeStyles(true);
+}
+
+// selected start or end date - update form and calendar dates between (if end date)
+function setDate() {
+  const dateSelected = this.getAttribute("data-date");
+
+  if (!dateStartSet) {
+    // clear any previous date selection
+    clearRangeStyles(true);
+
+    // save start date to check available dates when end date is selected
+    startDate = dateSelected;
+    console.log(startDate);
+    // add date to start date field
+    fieldDateStart.value = startDate;
+
+    // empty end date form field
+    fieldDateEnd.value = "";
+
+    // set dateClickStart so that the next click will be end date
+    dateStartSet = true;
+
+    // add start date class to this date
+    if (this.classList.contains("booked-am")) {
+      // end date is already set as start date for separate booking
+      addClass(this, "date-select-start-pm");
+    } else {
+      addClass(this, "date-select-start");
+    }
+  } else {
+    // setting end date - need to check and highlight dates between
+    let dateMove = new Date(startDate);
+    let dateEnd = new Date(dateSelected);
+    let strDate = startDate;
+    const numNights = datediff(dateMove, dateEnd); // calculte number of nights (only used if min nights > 0 )
+
+    if (dateSelected < startDate) {
+      alert(txtDateEendKO);
+      clearDates();
+    } else if (numNights < minNightsAllowed) {
+      alert(txtMinNights);
+    } else {
+      // set end date field value
+      fieldDateEnd.value = dateSelected;
+
+      // mark dates between
+      while (strDate < dateSelected) {
+        strDate = dateMove.toISOString().slice(0, 10);
+        if (strDate > startDate && strDate < dateSelected) {
+          // get date element from month
+          let betweenDate = document.querySelector(`#date_${strDate}`);
+          if (betweenDate.classList.contains("booked")) {
+            // date already booked - alert and reset
+            return dateNotAvail(betweenDate);
+          } else {
+            addClass(betweenDate, "date-select-between");
+          }
+        }
+        // move date foward by one day
+        dateMove.setDate(dateMove.getDate() + 1);
+      }
+
+      // add selected class
+      if (this.classList.contains("booked-pm")) {
+        // end date is already set as start date for separate booking
+        addClass(this, "date-select-end-am");
+      } else {
+        addClass(this, "date-select-end");
+      }
+
+      // reset click to make next date start date again
+      dateStartSet = false;
+    }
+  }
+}
+// TEST - highlight dates
+function highlightDates() {
+  if (dateStartSet) {
+    // Only if start date has been defined (clicked)
+
+    const dateSelected = this.getAttribute("data-date");
+    let dateMove = new Date(startDate);
+    let dateEnd = new Date(dateSelected);
+    let strDate = startDate;
+
+    // clear date range already marked to be able to mouseover back and forth over dates
+    clearRangeStyles(false);
+
+    if (dateSelected > startDate) {
+      // mark dates between
+      while (strDate < dateSelected) {
+        strDate = dateMove.toISOString().slice(0, 10);
+        if (strDate > startDate && strDate < dateSelected) {
+          let betweenDate = document.querySelector(`#date_${strDate}`);
+          addClass(betweenDate, "date-select-between");
+        }
+        // move date foward by one day
+        dateMove.setDate(dateMove.getDate() + 1);
+      }
+      if (this.classList.contains("booked-pm")) {
+        // end date is already set as start date for separate booking
+        addClass(this, "date-select-end-am");
+      } else {
+        addClass(this, "date-select-end");
+      }
+    }
+  }
+}
+// FETCH calendar JSON data
+function loadCal(direction) {
+  // show spinner
+  showSpinner(true);
+
+  // define data to send via fetch POST
+  let params = {
+    id_item: "" + acItemID + "",
+    lang: "" + acLang + "",
+    numMonths: "" + acNumMonthsElTmp + "",
+    startDate: "" + acStartDate + "",
+    direction: "" + direction + "",
+  };
+
+  const searchParams = new URLSearchParams(params);
+  (async function () {
+    let response = await fetch(urlCal + searchParams);
+    // If the call failed, throw an error
+    if (!response.ok) {
+      throw "Error getting month data";
+    } else {
+      // Otherwise, get the post JSON
+      const data = await response.json();
+
+      drawCal(data);
+    }
+  })();
+}
+
 // add JSON months returned to calendar container
-var drawCal = function (jsonObj) {
-  // clear calendar wrapper conetents
+function drawCal(data) {
+  if (data.error) {
+    return displayError(data.error);
+  }
+  // clear calendar wrapper contents
   acNumMonthsEl.innerHTML = "";
 
   // define data parts returned
-  const resMonths = jsonObj["months"];
-  const resWeekDays = jsonObj["weekdays"];
+  const resMonths = data["months"];
+  const resWeekDays = data["weekdays"];
 
   // loop through each month returmed to create calendar month
   for (let i = 0; i < resMonths.length; i++) {
@@ -331,224 +511,14 @@ var drawCal = function (jsonObj) {
     // remove spinner
     showSpinner(false);
 
-    // add click event to dates ONLY if field is defined (eg admin)
+    // add click event to dates
     activateDates();
   }
-};
-var datediff = function (first, second) {
-  // Take the difference between the dates and divide by milliseconds per day.
-  // Round to nearest whole number to deal with DST.
-  return Math.round((second - first) / (1000 * 60 * 60 * 24));
-};
-
-// functions for interactive calendar when user has defined start and end date fields
-/*
-	this will highlight the dates on mouseenter and mark the selected dates after 
-	checking their availabilty, sending the selected start and end dates to the user defined form fields.
-*/
-if (datesActive) {
-  let $clickable = "";
-  // make available dates clickable for bookings form date range selection
-  var activateDates = function () {
-    //console.log("activate dates");
-    // get all items with update-state class
-    $clickable = document.getElementsByClassName("available");
-
-    // add click event to state elements
-    [].forEach.call($clickable, function (el) {
-      el.addEventListener("click", setDate, false);
-      el.addEventListener("mouseenter", highlighttDates, false);
-    });
-  };
-
-  // dates selected not available
-  var dateNotAvail = function (el) {
-    alert("" + txtDatesNotAvailable + "");
-    clearDates();
-  };
-
-  // remove date range select styles
-  var clearRangeStyles = function (removeStartDate = true) {
-    if (removeStartDate) {
-      // remove all (reset)
-      [].forEach.call($clickable, function (el) {
-        el.classList.remove(
-          "date-select-start",
-          "date-select-between",
-          "date-select-end",
-          "date-select-end-am"
-        );
-      });
-    } else {
-      // leave start date
-      [].forEach.call($clickable, function (el) {
-        el.classList.remove(
-          "date-select-between",
-          "date-select-end",
-          "date-select-end-am"
-        );
-      });
-    }
-  };
-  // reset date range
-  var clearDates = function () {
-    dateStartSet = false;
-    fieldDateStart.value = "";
-    fieldDateEnd.value = "";
-    clearRangeStyles(true);
-  };
-
-  // selected start or end date - udpate form and calendar dates between (if end date)
-  var setDate = function () {
-    dateSelected = this.getAttribute("data-date");
-
-    if (!dateStartSet) {
-      // clear any previous date selection
-      clearRangeStyles(true);
-
-      // save start date to check available dates when end date is selected
-      startDate = dateSelected;
-
-      // add date to start date field
-      fieldDateStart.value = startDate;
-
-      // empty end date form field
-      fieldDateEnd.value = "";
-
-      // set dateClickStart so that the next click will be end date
-      dateStartSet = true;
-
-      // add start date class to this date
-      if (this.classList.contains("booked-am")) {
-        // end date is already set as start date for separate booking
-        addClass(this, "date-select-start-pm");
-      } else {
-        addClass(this, "date-select-start");
-      }
-    } else {
-      // setting end date - need to check and highlight dates between
-      var dateMove = new Date(startDate);
-      var dateEnd = new Date(dateSelected);
-      var strDate = startDate;
-      var numNights = datediff(dateMove, dateEnd); // calculte number of nights (only used if min nights > 0 )
-
-      if (dateSelected < startDate) {
-        alert(txtDateEendKO);
-        clearDates();
-      } else if (numNights < minNightsAllowed) {
-        alert(txtMinNights);
-      } else {
-        // set end date field value
-        fieldDateEnd.value = dateSelected;
-
-        // mark dates between
-        while (strDate < dateSelected) {
-          var strDate = dateMove.toISOString().slice(0, 10);
-          if (strDate > startDate && strDate < dateSelected) {
-            // get date element from month
-            var betweenDate = document.querySelector(`#date_${strDate}`);
-            if (betweenDate.classList.contains("booked")) {
-              // date already booked - alert and reset
-              return dateNotAvail(betweenDate);
-            } else {
-              addClass(betweenDate, "date-select-between");
-            }
-          }
-          // move date foward by one day
-          dateMove.setDate(dateMove.getDate() + 1);
-        }
-
-        // add selected class
-        if (this.classList.contains("booked-pm")) {
-          // end date is already set as start date for separate booking
-          addClass(this, "date-select-end-am");
-        } else {
-          addClass(this, "date-select-end");
-        }
-
-        // reset click to make next date start date again
-        dateStartSet = false;
-      }
-    }
-  };
-
-  // TEST - highlight dates
-  var highlighttDates = function () {
-    if (dateStartSet) {
-      // Only if start date has been defined (clicked)
-
-      var dateSelected = this.getAttribute("data-date");
-      var dateMove = new Date(startDate);
-      var dateEnd = new Date(dateSelected);
-      var strDate = startDate;
-
-      // clear date range already marked to be able to mouseover back and forth over dates
-      clearRangeStyles(false);
-
-      if (dateSelected > startDate) {
-        // mark dates between
-        while (strDate < dateSelected) {
-          var strDate = dateMove.toISOString().slice(0, 10);
-          if (strDate > startDate && strDate < dateSelected) {
-            var betweenDate = document.querySelector(`#date_${strDate}`);
-            addClass(betweenDate, "date-select-between");
-          }
-          // move date foward by one day
-          dateMove.setDate(dateMove.getDate() + 1);
-        }
-        if (this.classList.contains("booked-pm")) {
-          // end date is already set as start date for separate booking
-          addClass(this, "date-select-end-am");
-        } else {
-          addClass(this, "date-select-end");
-        }
-      }
-    }
-  };
 }
-
-// FETCH calendar JSON data
-var loadCal = function (direction) {
-  // show spinner
-  showSpinner(true);
-
-  // define data to send via fetch POST
-  let data = {
-    id_item: "" + acItemID + "",
-    lang: "" + acLang + "",
-    numMonths: "" + acNumMonthsElTmp + "",
-    startDate: "" + acStartDate + "",
-    direction: "" + direction + "",
-  };
-
-  // fetch calendar data
-  fetch(urlCal, {
-    method: "POST",
-    mode: "same-origin",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (res) {
-      // define new start date for next cal load
-      acStartDate = res["start-date"];
-
-      // draw calendar
-      drawCal(res);
-    })
-    .catch(function (error) {
-      console.log("Request failed", error);
-    });
-};
 
 // device detection - we are only interested if it is a mobile device or not
 // NOTE - NOT returning iPad as mobile device as it is now pretending to be a desktop agent
-var deviceDetect = function () {
+function deviceDetect() {
   if (
     /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
       navigator.userAgent
@@ -561,7 +531,7 @@ var deviceDetect = function () {
   } else {
     return false;
   }
-};
+}
 
 // once document has loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -588,32 +558,12 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("resize", debounce(reloadOnResize, 150));
 });
 // recreate calendar on window resize - will remember selected first month even if it is not current month
-const reloadOnResize = function () {
+function reloadOnResize() {
   // NOT on mobiles as they resize automatically on scroll to remove the header bar
   if (!isMobile) {
     // recalculate number of months we can show accoring to window size
-    acNumMonthsElTmp = monthsToSHow();
+    acNumMonthsElTmp = monthsToShow();
     // initiate calendar
     loadCal("current");
   }
-};
-/*
-if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-	  	var isMobile = true;
-	}
-*/
-// device detection
-
-/*
-const deviceType = () => {
-    const ua = navigator.userAgent;
-    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
-        return "tablet";
-    }
-    else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
-        return "mobile";
-    }
-    return "desktop";
-};
-alert(deviceType());
-*/
+}
