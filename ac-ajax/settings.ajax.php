@@ -1,11 +1,12 @@
 <?php
 /*
-Script		:	Ajax availability calendar www.ajaxavailabilitycalendar.com
-Author		: 	Chris Bolson www.cbolson.com
+Script		: Ajax availability calendar www.ajaxavailabilitycalendar.com
+Author		: Chris Bolson www.cbolson.com
 
-File		: 	settings.ajax.php
-Date		: 	2021-10-16
-Use			: 	get calendar settings such as styles and texts
+File		: settings.ajax.php
+Date add	: 2021-10-16
+Date mod	: 2023-01-04
+Use			: get calendar settings such as styles and texts to be sent to js file for calendar settings
 */
 
 // get vars sent (GET)

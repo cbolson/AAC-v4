@@ -1,11 +1,11 @@
 <?php
 /*
 Script		:	Ajax availability calendar www.ajaxavailabilitycalendar.com
-Wuthor		: 	Chris Bolson www.cbolson.com
+Author		: 	Chris Bolson www.cbolson.com
 
 File		: 	common.ajax.php
 Date		: 	2021-09-27
-Use			: 	Inlcuded in all ajax files to connect to database etc.
+Use			: 	Included in all ajax files to connect to database etc.
 				Defines settings, connects to db, includes common files
 */
 

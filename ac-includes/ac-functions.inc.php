@@ -1,21 +1,18 @@
 <?php
 /*
-Script		:	Ajax availability calendar www.ajaxavailabilitycalendar.com
-Wuthor		: 	Chris Bolson www.cbolson.com
+Script		: Ajax availability calendar www.ajaxavailabilitycalendar.com
+Author		: Chris Bolson www.cbolson.com
 
-File		: 	functions.inc.php
-Date		:	2021-09-20
-Use			: 	common functions for all pages
+File		: functions.inc.php
+Date		: 2021-09-20
+Date mod	: 2023-01-04
+Use			: common functions for all pages
 */
 
 // set local time for newer php installations that require it (function at bottom of page)
 //date_default_timezone_set(getLocalTimezone());
 
-
-
-//echo strftime("%a %e %B %Y",strtotime($date_db));
-
-// readable array output
+// util - readable array output
 if(!function_exists("print_arr")){
 	function print_arr($arr){
 		echo "<pre>";
@@ -30,14 +27,6 @@ if(!function_exists("date2string")){
 		return strftime("%A %e %B, %Y", strtotime($date));  
 	}
 }
-/*
-if(!function_exists("dateMonth")){
-	function dateMonth($date){
-		return strftime("%B %Y", strtotime($date));  
-	}
-}
-*/
-
 // ensure date is correctly formated for date calulations and db storage yyyy-mm-dd 
 if(!function_exists("date2db")){	
 	function date2db($year,$month,$this_day_counter){
@@ -278,8 +267,6 @@ if(!function_exists("drawCalJSON")){
 		return $arr_month;
 	}
 }
-
-
 
 //	get calendar items for select list
 function selectListItems($id_item_current,$sql_cond=''){
@@ -628,68 +615,4 @@ if(!function_exists("blockMsg")){
 		return $data;
 	}
 }
-/*
-//	get item title
-function itemTitle($id){
-	global $db_cal;
-	$sql="SELECT desc_".AC_LANG." as item_title FROM ".AC_TBL_ITEMS." WHERE id=".mysqli_real_escape_string($db_cal,$id)."";
-	$res=mysqli_query($db_cal,$sql) or die("Error getting item name");
-	$row=mysqli_fetch_assoc($res);
-	return $row["item_title"];
-}
-*/
-/*
-
-// set time zone for newer php installations
-function getLocalTimezone(){
-  	$iTime = time();
-    $arr = localtime($iTime);
-    $arr[5] += 1900;
-    $arr[4]++;
-    $iTztime = gmmktime($arr[2], $arr[1], $arr[0], $arr[4], $arr[3], $arr[5], $arr[8]);
-   	$offset = doubleval(($iTztime-$iTime)/(60*60));
-    $zonelist = array (
-        'Kwajalein' 			=> -12.00,
-        'Pacific/Midway' 		=> -11.00,
-        'Pacific/Honolulu' 		=> -10.00,
-        'America/Anchorage' 	=> -9.00,
-        'America/Los_Angeles' 	=> -8.00,
-        'America/Denver' 		=> -7.00,
-        'America/Tegucigalpa' 	=> -6.00,
-        'America/New_York' 		=> -5.00,
-        'America/Caracas' 		=> -4.30,
-        'America/Halifax' 		=> -4.00,
-        'America/St_Johns' 		=> -3.30,
-        'America/Argentina/Buenos_Aires' => -3.00,
-        'America/Sao_Paulo' 	=> -3.00,
-        'Atlantic/South_Georgia'=> -2.00,
-        'Atlantic/Azores' 		=> -1.00,
-        'Europe/Dublin' 		=> 0,
-        'Europe/Belgrade' 		=> 1.00,
-        'Europe/Minsk' 			=> 2.00,
-        'Asia/Kuwait' 			=> 3.00,
-        'Asia/Tehran' 			=> 3.30,
-        'Asia/Muscat' 			=> 4.00,
-        'Asia/Yekaterinburg' 	=> 5.00,
-        'Asia/Kolkata' 			=> 5.30,
-        'Asia/Katmandu' 		=> 5.45,
-        'Asia/Dhaka' 			=> 6.00,
-        'Asia/Rangoon' 			=> 6.30,
-        'Asia/Krasnoyarsk' 		=> 7.00,
-        'Asia/Brunei' 			=> 8.00,
-        'Asia/Seoul' 			=> 9.00,
-        'Australia/Darwin' 		=> 9.30,
-        'Australia/Canberra' 	=> 10.00,
-        'Asia/Magadan' 			=> 11.00,
-        'Pacific/Fiji' 			=> 12.00,
-        'Pacific/Tongatapu' 	=> 13.00
-    );
-    $index = array_keys($zonelist, $offset);
-    if(sizeof($index)!=1){
-        return false;
-    }
-    return $index[0];
-}
-*/
-
 ?>

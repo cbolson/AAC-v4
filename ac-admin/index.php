@@ -116,10 +116,10 @@ if(isset($msg)){
 // block - contents
 if(!empty($contents)){
 	$block_contents='
-	<main>
+	<section>
 		'.$block_title.'
 		'.$contents.'
-	</main>
+	</section>
 	';
 }
 // block - extra js code
@@ -148,16 +148,18 @@ echo '
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="user-scalable=yes, width=device-width">
 		<title>Admin : '.$page_title.' | Ajax Availability Calendar</title>
-		<link rel="stylesheet" href="assets/admin.css?v='.time().'">
+		<link rel="stylesheet" href="/ac-admin/assets/admin.css?v='.time().'">
 	</head>
-	<body id="'.$body_id.'">
-		<header>
-			<div id="logo"><img src="'.AC_LOGO.'" title="Availability Calendar - Admin" width="300"></div>
-			'.$block_nav.'
-		</header>
-		'.$block_msg.'
-		'.$block_contents.'
-		'.$block_footer.'
+	<body>
+		 <main>
+			<header class="header">
+				<div class="header__logo"><img src="'.AC_LOGO.'" title="Availability Calendar - Admin" width="300"></div>
+				'.$block_nav.'
+			</header>
+			'.$block_msg.'
+			'.$block_contents.'
+			'.$block_footer.'
+		</main>
 		<script defer src="assets/svgxuse.min.js"></script>
 		<script defer src="assets/ac-functions.js?'.time().'"></script>
 		'.$xtra_js_files.'
