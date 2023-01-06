@@ -22,38 +22,16 @@ if(file_exists($the_file)){
 			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<title>Ajax Availability Calendar - Install</title>
-			<style type="text/css">
-				body{
-					font-family:verdana;
-					font-size:1rem;
-				}
-				main{
-					max-width:600px;
-					margin:20px auto;
-					border:1px solid #006699;
-					overflow:hidden;
-				}
-				header{
-					background:#006699;
-					padding:1rem;
-				}
-				section{
-					padding:1rem;
-				}
-				footer{
-					background:#EEE;
-					padding:.5rem 1rem;
-					font-size:0.8em;
-					display:flex;
-					justify-content:space-between;
-					align-items:center;
-				}
-			</style>
+			 <link rel="stylesheet" href="/ac-admin/assets/admin.css?v3" />
+
 		</head>
 		<body>
 		<main>
-			<header>
-				<img src="/ac-assets/logo-acc.svg" title="Availability Calendar - Administration" width="200">
+			<header class="header">
+				<div class="header__logo">
+					<img src="/ac-assets/logo-acc.svg" title="Availability Calendar - Administration" width="200">
+				</div>
+				<h1 class="header__version">'.CAL_VERSION.'</h1>
 			</header>
 			<section>
 				<h1>install script</h1>
@@ -67,7 +45,7 @@ if(file_exists($the_file)){
 					<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 					<input type="hidden" name="cmd" value="_s-xclick">
 					<input type="hidden" name="hosted_button_id" value="5972777">
-					<input type="image" src="/ac-assets/donate-paypal.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online." style="border:none; width:80px;">
+					<input type="image" src="/ac-assets/donate-paypal.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online." style="border:none; width:120px;">
 					<img alt="" border="0" src="https://www.paypal.com/es_ES/i/scr/pixel.gif" width="1" height="1">
 					</form>
 				</div>

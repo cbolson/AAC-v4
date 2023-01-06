@@ -8,7 +8,7 @@
   --body-bg: hsl(0, 0%, 90%);
   --txt-clr: hsl(0, 0%, 7%);
 
-  --ac-padding: 1rem 2rem;
+  --ac-padding: 0.3rem 0;
   --base-color1: 200; /* blue */
 
   --header-bg: hsla(200, 50%, 35%);
@@ -21,6 +21,7 @@
   --ac-link: var(--ac-color1-normal);
   --ac-border-color: #ddd;
   --ac-fields-border: #ccc;
+  --ac-fields-bg: #eee;
   --ac-fields-bg-hover: #f7f6f4;
 
   --ac-msg-bg-ok: #f4faf4;
@@ -75,6 +76,7 @@ div.msg {
 }
 .header__logo {
   flex: 0 0 220px;
+  margin-right: auto;
 }
 .header__logo img {
   width: 100%;
@@ -127,31 +129,9 @@ li.ok::before {
 }
 
 /* login & password reset */
-body#login header,
-body#login main,
-body#login footer,
-body#login div.msg {
-  max-width: 380px;
-  text-align: center;
-}
-body#login footer {
-  padding: 20px 0;
-}
-body#login .field-row,
-body#login .block-footer {
-  text-align: center;
-}
-body#login input {
-  width: 100%;
-}
-body#login .header {
-  display: block;
-}
-body#login .header__logo {
-  margin: auto;
-}
-body#login div.field-row input[type="submit"] {
-  margin-left: 0;
+.block--login {
+  max-width: 480px;
+  margin-inline: auto;
 }
 
 /* nav */
@@ -247,7 +227,7 @@ nav ul li a:hover {
 div.msg {
   background: #ffffdf;
   margin: 10px auto;
-  padding: var(--ac-padding);
+  padding: 0.5rem 1rem;
 }
 div.msg.alert {
   background: var(--ac-msg-bg-alert);
@@ -281,6 +261,7 @@ select,
   -moz-border-radius: var(--ac-fields-radius);
   -webkit-border-radius: var(--ac-fields-radius);
   border-radius: var(--ac-fields-radius);
+  background-color: var(--ac-fields-bg);
 }
 select {
   border-radius: 0;
@@ -398,23 +379,24 @@ input.slider::-moz-range-thumb {
   color: #fff;
 }
 div.field-row {
-  margin-bottom: 5px;
+  margin-bottom: 1rem;
 }
 div.field-row input:not([type="submit"]) {
   width: 100%;
 }
+
 div.field-row label {
   display: block;
-  padding: 5px 0;
-  color: #666;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
 }
 div.field-row input[type="submit"] {
   width: auto;
 }
 div.field-row .field-data {
-  padding: 14px 10px;
+  /* padding: 14px 10px;
   border-bottom: 1px dashed #ddd;
-  width: 100%;
+  width: 100%; */
 } /* try to have same spacing as form fields */
 div.field-row .note {
   display: block;
@@ -476,11 +458,13 @@ span.pseudo-button {
 /* blocks */
 .block {
   color: #2d567c;
-  padding: 20px 30px;
+  /* padding: 20px 30px; */
 }
 .block-title {
   display: flex;
-  border-bottom: 1px solid var(--ac-border-color);
+  justify-content: center;
+  align-items: center;
+  /* border-bottom: 1px solid var(--ac-border-color); */
   padding: var(--ac-padding);
 }
 .block-title h1 {
@@ -527,7 +511,7 @@ table {
 }
 td {
   border-bottom: 1px dashed #ddd;
-  padding: 5px 2px;
+  padding: 0.5rem;
 }
 table tr:nth-child(even) td {
   background: #fdfdfd;
@@ -575,6 +559,14 @@ tr.item-alert td {
 thead td {
   background: #eee;
   text-align: center;
+}
+
+td ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /*! Huebee v1.0.1
@@ -673,22 +665,22 @@ http://huebee.buzz
   }
 
   div.field-row {
-    display: flex;
+    /* display: flex; */
   }
   div.field-row label {
-    flex: 0 0 240px;
-    line-height: 2.3em;
+    /* flex: 0 0 240px;
+    line-height: 2.3em; */
   }
   div.field-row label {
-    padding: 0 10px;
+    /* padding: 0 10px;
     margin-right: 5px;
     background: var(--ac-color1-light);
-    border-radius: var(--ac-fields-radius);
+    border-radius: var(--ac-fields-radius); */
   }
 
   div.field-row input[type="submit"] {
-    margin-left: 245px;
-    width: auto;
+    /* margin-left: 245px;
+    width: auto; */
   }
   .icon {
     width: 1.2em;
@@ -721,20 +713,20 @@ http://huebee.buzz
     top: 0;
     right: auto;
     text-align: right;
+    margin-left: auto;
     background: transparent;
     border: none;
   }
   nav ul {
     max-height: 100%;
-    line-height: 52px;
+
     padding: 0;
     transition: all 0s;
-    display: inline-table;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
   }
   nav ul li {
-    display: table-cell;
-    padding: 0;
-    margin: 0;
   }
   nav ul li a:hover {
   }

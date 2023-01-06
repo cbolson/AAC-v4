@@ -93,8 +93,6 @@ $contents.='
 					'.$ac_lang["note_interactive_settings_admin"].'
 				</div>
 				<br><span id="bt-reset-styles" onclick="resetStyles()" class="pseudo-button">'.$ac_lang["bt_reset_styles"].'</span>
-				
-				
 			</div>
 		</div>
 		'.fieldRowButton('<input type="submit" value="'.$ac_lang["save"].'" />').'
@@ -116,7 +114,7 @@ let urlRoot="'.AC_URL.'";
 				 ac-dateStart="date-start" ac-dateEnd="date-end"
 		*/
 		$xtra_js_files='
-		<script src="'.AC_URL.'ac-assets/ac-calendar.js?v=4.51" id="ac-cal" ac-container="demo-calendar" ac-item="1"></script>
+		<script src="'.AC_URL.'ac-assets/ac-calendar.js?v=4.51" id="ac-cal" ac-container="demo-calendar" ac-item="1" type="module"></script>
 		<script src="assets/huebee.pkgd.min.js"></script>
 		';
 		

@@ -432,7 +432,7 @@ function loadCal(direction) {
     startDate: "" + acStartDate + "",
     direction: "" + direction + "",
   };
-
+  console.log(acStartDate);
   const searchParams = new URLSearchParams(params);
   (async function () {
     let response = await fetch(urlCal + searchParams);
@@ -442,6 +442,8 @@ function loadCal(direction) {
     } else {
       // Otherwise, get the post JSON
       const data = await response.json();
+      // define new start date for next cal load
+      acStartDate = data["start-date"];
 
       drawCal(data);
     }
@@ -463,13 +465,11 @@ function drawCal(data) {
   // loop through each month returmed to create calendar month
   for (let i = 0; i < resMonths.length; i++) {
     // month title
-    let cl_monthTitleEl = monthTitleEl.cloneNode(true);
-    cl_monthTitleEl.textContent = resMonths[i].month_title;
+    let monthTitleClone = monthTitleEl.cloneNode(true);
+    monthTitleClone.textContent = resMonths[i].month_title;
 
-    const cl_weekDayTitlesEl = weekDayTitlesEl.cloneNode(true);
-
-    // week days
-    let cl_weekDaysNumbersEl = weekDaysNumbersEl.cloneNode(true);
+    const weekDayTitlesClone = weekDayTitlesEl.cloneNode(true);
+    let weekDaysNumbersClone = weekDaysNumbersEl.cloneNode(true);
     let days = resMonths[i].days;
     for (let j = 0; j < days.length; j++) {
       // clone li element
@@ -496,17 +496,19 @@ function drawCal(data) {
       dateNum.textContent = days[j].n;
 
       // add date to ul
-      cl_weekDaysNumbersEl.appendChild(dateNum);
+      weekDaysNumbersClone.appendChild(dateNum);
     }
 
     // put month together
-    const cl_newMonthEl = newMonthEl.cloneNode(true);
-    cl_newMonthEl.appendChild(cl_monthTitleEl);
-    cl_newMonthEl.appendChild(cl_weekDayTitlesEl);
-    cl_newMonthEl.appendChild(cl_weekDaysNumbersEl);
+    const newMonthCl = newMonthEl.cloneNode(true);
+    newMonthCl.append(
+      monthTitleClone,
+      weekDayTitlesClone,
+      weekDaysNumbersClone
+    );
 
     // add calendar month
-    acNumMonthsEl.appendChild(cl_newMonthEl);
+    acNumMonthsEl.appendChild(newMonthCl);
 
     // remove spinner
     showSpinner(false);

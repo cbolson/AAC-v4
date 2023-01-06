@@ -1,6 +1,6 @@
 <?php
 $show_form=true;
-
+$page_title = "Login reminder";
 if(isset($_POST["bt-submit"])){
 	if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
 		// email not valid
@@ -64,7 +64,7 @@ if(isset($_POST["bt-submit"])){
 
 if($show_form){
 	$contents='
-	<div id="login" class="block">
+	<div class="block block--login">
 		<div class="block-inner">
 			<form method="post" action="">
 				<input type="hidden" name="p" value="login-remider">

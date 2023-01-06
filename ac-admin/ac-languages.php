@@ -96,7 +96,8 @@ if(isset($_POST["mod"])){
 			VALUES 
 				".trim($insert_data,",")."
 			";
-			mysqli_query($db_cal,$insert) or die("Error - insert texts");
+			echo $insert;
+			mysqli_query($db_cal,$insert) or die("Error - insert texts<br>".mysqli_error($db_cal));
 		}
 	}
 	

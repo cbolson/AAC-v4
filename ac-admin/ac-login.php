@@ -1,7 +1,7 @@
 <?php
 $user_email = '';
 $user_pass 	= '';
-
+$page_title	= 'Login';
 
 if(isset($_POST["email"])){
 	$user_email	= $_POST["email"];
@@ -45,10 +45,10 @@ if(isset($_POST["email"])){
 
 //	define login form
 $contents='
-<div id="login" class="block">
-		<form method="post" action="index.php">
-		'.fieldRowButton('<input type="email" name="email" value="'.$user_email.'" placeholder="'.$ac_lang["email"].'" required title="'.$ac_lang["email"].'">').'
-		'.fieldRowButton('<input type="password" name="password" value="'.$user_pass.'" placeholder="'.$ac_lang["password"].'" required>').'
+<div class="block block--login">
+	<form method="post" action="/ac-admin/">
+		'.fieldRowData($ac_lang["email"], '<input type="email" name="email" value="'.$user_email.'"  required>').'
+		'.fieldRowData($ac_lang["password"], '<input type="password" name="password" value="'.$user_pass.'" required>').'
 		'.fieldRowButton('<input type="submit" id="bt-login" value="'.$ac_lang["bt_login"].'">').'
 	</form>
 	

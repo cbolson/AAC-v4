@@ -1,14 +1,14 @@
 <?php
 /*
-Script		:	Ajax availability calendar www.ajaxavailabilitycalendar.com
-Author		: 	Chris Bolson www.cbolson.com
+Script		: Ajax availability calendar www.ajaxavailabilitycalendar.com
+Author		: Chris Bolson www.cbolson.com
 
-File		: 	settings.ajax.php
-Date		: 	2021-09-24
-Use			: 	general admin ajax file
+File		: admin.ajax.php
+Date		: 2021-09-24
+Use			: general admin ajax file
 */
 
-$admin_only			= true;	# define to verifiy that admin session is active
+$admin_only			= true;	# define to verify that admin session is active
 $is_ajax			= true; # define to let other files that this is an ajax call (eg for error messages which need to be json)
 $inc_languages		= false;
 $inc_functions		= false;

@@ -1,15 +1,13 @@
 <?php
 /*
-script		:	Ajax availability calendar www.ajaxavailabilitycalendar.com
-author		: 	Chris Bolson www.cbolson.com
+Script		: Ajax availability calendar www.ajaxavailabilitycalendar.com
+Author		: Chris Bolson www.cbolson.com
 
 file		: 	ac-db-connect.inc.php
 use			: 	connect to database using variables defined in "config.inc.php"
 instructions:	No need to modify this file other than to adjust error messages
 */
 $error=false;
-
-
 
 // error message function (can't include in general functions file as it may be needed before that file is included)
 if(!function_exists("returnError")){
@@ -90,12 +88,10 @@ if(!function_exists("returnError")){
 		}
 	}
 }
-
-
-
+$dir_root = dirname(__FILE__);
 // check that ac-install has been deleted
-if($_SERVER["REQUEST_URI"]!="/ac-install.php"){
-	$the_file=$_SERVER['DOCUMENT_ROOT'].'/ac-includes/ac-check-install.inc.php';
+if($dir_root!="/ac-install.php"){
+	$the_file=$dir_root.'/ac-check-install.inc.php';
 	if(!file_exists($the_file)) die("<b>".$the_file."</b> not found");
 	else		require_once($the_file);
 }
