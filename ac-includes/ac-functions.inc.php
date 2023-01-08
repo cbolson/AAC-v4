@@ -49,7 +49,13 @@ if(!function_exists("getTotalMonthDays")){
 
 // get booked dates from db between given dates (date + num months)
 if(!function_exists("getBookings")){
-	function getBookings($id_item,$start_month,$start_year,$num_months=1,$tmp_lang=AC_DEFAULT_LANG){
+	function getBookings(
+		$id_item,
+		$start_month,
+		$start_year,
+		$num_months=1,
+		$tmp_lang=AC_DEFAULT_LANG
+	){
 		global $db_cal;
 		
 		//	get bookings for this month and item from database
@@ -85,7 +91,11 @@ if(!function_exists("getBookings")){
 
 // create month view from given month & year and show date states
 if(!function_exists("drawCalJSON")){
-	function drawCalJSON($start_month,$start_year,$arr_dates_booked=array()){
+	function drawCalJSON(
+		$start_month,
+		$start_year,
+		$arr_dates_booked = []
+	){
 		global $ac_lang;
 		
 		// arr - weekend day numbers

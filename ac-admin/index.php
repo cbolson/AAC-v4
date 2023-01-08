@@ -153,8 +153,10 @@ echo '
 	<body>
 		 <main>
 			<header class="header">
-				<div class="header__logo"><img src="'.AC_LOGO.'" title="Availability Calendar - Admin" width="300"></div>
-				'.$block_nav.'
+				
+					<div class="header__logo"><img src="'.AC_LOGO.'" title="Availability Calendar - Admin" width="300"></div>
+					'.$block_nav.'
+			
 			</header>
 			'.$block_msg.'
 			'.$block_contents.'

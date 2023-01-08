@@ -247,7 +247,7 @@ function monthsToShow() {
     const acWidth = acWrapper.clientWidth;
     return Math.floor(acWidth / acMonthWidth);
   } else {
-    return acNumMonthsInitial; // user defined
+    return acNumMonthsInital; // user defined
   }
 }
 

@@ -84,18 +84,25 @@ $contents.='
 		'.fieldRow($ac_lang["min_nights"] 				, 'min_nights'		, '<input type="number" id="min_nights"		name="mod[min_nights]"		value="'.$row_config["min_nights"].'" min="0" max="100" style="width:140px;">').'
 		<h2>'.$ac_lang["styles"].'</h2>
 		<div class="block-cols">
-			<div>
+			<div class="settings-colors">
 				'.$row_settings.'
 			</div>
 			<div>
-				<div id="demo-calendar" style="margin-bottom:10px;"></div>
+			<div class="settings-sticky">
+				<div id="demo-calendar"   style="margin-bottom:10px;"></div>
+				
+				<br>
+				<span id="bt-reset-styles" onclick="resetStyles()" class="pseudo-button">'.$ac_lang["bt_reset_styles"].'</span>
+				<br>&nbsp;
 				<div class="block-msg advice" >
 					'.$ac_lang["note_interactive_settings_admin"].'
 				</div>
-				<br><span id="bt-reset-styles" onclick="resetStyles()" class="pseudo-button">'.$ac_lang["bt_reset_styles"].'</span>
+			</div>
 			</div>
 		</div>
-		'.fieldRowButton('<input type="submit" value="'.$ac_lang["save"].'" />').'
+		<div style="border-top:1px solid #DDD; margin-top:2rem; padding-top:2rem; text-align:center">
+			'.fieldRowButton('<input type="submit" value="'.$ac_lang["save"].'" />').'
+		</div>
 	</form>
 	
 </div>
@@ -104,17 +111,8 @@ $contents.='
 let urlRoot="'.AC_URL.'";
 </script>
 ';
-		/*
-			<div id="block-booking" style="margin-top:10px;">
-					<input type="date" id="date-start" value="">
-					<input type="date" id="date-end" value="">
-					<input type="submit" value="_save dates_" disabled="disabled">
-				</div>
-				
-				 ac-dateStart="date-start" ac-dateEnd="date-end"
-		*/
 		$xtra_js_files='
-		<script src="'.AC_URL.'ac-assets/ac-calendar.js?v=4.51" id="ac-cal" ac-container="demo-calendar" ac-item="1" type="module"></script>
+		<script src="'.AC_URL.'ac-assets/ac-calendar.js?v=4.51" type="module" id="ac-cal" ac-container="demo-calendar" ac-item="1" ac-months="1"></script>
 		<script src="assets/huebee.pkgd.min.js"></script>
 		';
 		

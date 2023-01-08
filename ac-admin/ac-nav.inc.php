@@ -91,7 +91,24 @@ foreach($nav_items AS $nav_type=>$nav_data){
 //	create menu
 if(!empty($list_nav_items)){
 	$block_nav='
-	<input type="checkbox" id="nav-check">
+	
+	<nav>
+						<button id="hamburger" class="hamburger" aria-controls="primary-navigation" aria-expanded="false" aria-label="Menu">
+							<svg class="hamburger" viewBox="0 0 100 100" width="30">
+								<rect class="line line__top" width="80" height="10" x="10" y="25" rx="5"></rect>
+								<rect class="line line__middle" width="80" height="10" x="10" y="45" rx="5"></rect>
+								<rect class="line line__bottom" width="80" height="10" x="10" y="65" rx="5"></rect>
+							</svg>
+						</button>
+						<ul id="primary-navigation" class="menu">
+							'.$list_nav_items.'
+						</ul>
+					</nav>
+
+	';
+}
+/*
+<input type="checkbox" id="nav-check">
 	<label for="nav-check">
 		<div id="nav-hamburger">
 			<span class="bar bar1"></span>
@@ -105,6 +122,5 @@ if(!empty($list_nav_items)){
 			'.$list_nav_items.'
 		</ul>
 	</nav>
-	';
-}
+*/
 ?>

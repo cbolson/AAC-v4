@@ -28,7 +28,15 @@
   --ac-msg-bg-alert: #ffd9d9;
 
   --ac-border-radius: 0;
-  --ac-fields-radius: 3px;
+  --ac-fields-radius: 8px;
+
+  --nav-bg-hvr: var(--bg-body);
+  --nav-txt-clr: hsl(0, 0%, 90%);
+  --nav-txt-clr-hover: #000;
+
+  --hamburger-clr: #fff;
+  --hamburger-display: block;
+  --hamburger-speed: 100ms;
 }
 
 body {
@@ -71,9 +79,15 @@ div.msg {
 
   position: relative;
   display: flex;
+  align-items: flex-start;
   justify-content: center;
-  align-items: center;
 }
+/* .header__top {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+} */
 .header__logo {
   flex: 0 0 220px;
   margin-right: auto;
@@ -136,92 +150,93 @@ li.ok::before {
 
 /* nav */
 nav {
-  width: 100%;
-  padding: 0;
-  position: absolute;
-  top: 64px;
-  right: 0;
-  background-color: var(--ac-color1-normal);
-  border-radius: 0 0 var(--ac-border-radius) var(--ac-border-radius);
+  margin-left: auto;
+  flex: 1;
 }
-nav ul {
-  list-style-type: none;
-  max-height: 0px;
-  overflow: hidden;
-  transition: all 0.4s ease-in-out;
+.hamburger {
+  margin: 0.6em 0.5em 0 auto;
+  display: var(--hamburger-display);
+  fill: var(--hamburger-clr);
+  cursor: pointer;
+  background: transparent;
+  border: none;
 }
-nav ul li {
-  list-style-type: none;
+.hamburger:focus {
+  fill: var(--primary-clr-300);
 }
-nav ul li a {
-  display: block;
-  color: #fff;
+.hamburger .line {
+  transition: y var(--hamburger-speed) ease-in var(--hamburger-speed),
+    rotate var(--hamburger-speed) ease-in, opacity 0ms var(--hamburger-speed),
+    fill var(--hamburger-speed) ease-in;
+  transform-origin: center;
+}
+.hamburger[aria-expanded="true"] .line {
+  transition: y var(--hamburger-speed) ease-in,
+    rotate var(--hamburger-speed) ease-in var(--hamburger-speed),
+    opacity 0ms var(--hamburger-speed);
+}
+.hamburger[aria-expanded="true"] .line__bottom,
+.hamburger[aria-expanded="true"] .line__top {
+  y: 45px;
+}
+.hamburger[aria-expanded="true"] .line__top {
+  rotate: 45deg;
+}
+.hamburger[aria-expanded="true"] .line__bottom {
+  rotate: -45deg;
+}
+.hamburger[aria-expanded="true"] .line__middle {
+  opacity: 0;
+}
+.hamburger main {
+  padding: 4rem;
+}
+
+.menu {
+  flex: 1 1 100%;
+  flex-basis: 100%;
+  width: auto;
+  list-style: none;
   text-decoration: none;
-  padding: 8px 10px;
-  margin: 0;
-  transition: background 0.4s ease-in-out;
-}
-nav ul li.active a {
-  background: var(--ac-color1-normal);
-}
-nav ul li a:hover {
-  background: var(--ac-color1-light);
-  color: #000;
-}
-#nav-check {
-  display: none;
-}
-#nav-check:checked ~ nav ul {
-  max-height: 100%;
-}
-#nav-hamburger {
-  margin: -12px auto 0;
-  width: 24px;
-  height: 24px;
-  position: absolute;
-  top: 50%;
-  right: 20px;
-}
-#nav-hamburger .bar {
+  height: 0;
+  overflow: hidden;
+  transition: height 300ms ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: right;
   padding: 0;
-  width: 24px;
-  height: 4px;
-  background-color: #fff;
-  display: block;
-  border-radius: 4px;
-  transition: all 0.4s ease-in-out;
+  margin: 0 0.4em 0 0;
+  gap: 0.5em;
+}
+.menu li {
+  margin-left: auto;
+  text-align: right;
+  padding: 0;
+}
+.menu li + li {
+  margin-left: 0;
+}
+.menu a {
+  color: var(--nav-txt-clr);
+  line-height: 1.2em;
+  padding: 0 1rem;
+  text-decoration: none;
+  position: relative;
+}
+.menu a:focus,
+.menu a:hover {
+  color: #fff;
+}
+.menu li.active a::after,
+.menu a:focus::after,
+.menu a:hover::after {
+  content: "\276E";
   position: absolute;
-}
-#nav-hamburger .bar1 {
-  top: 0;
-}
-#nav-hamburger .bar2,
-#nav-hamburger .bar3 {
-  top: 10px;
-}
-#nav-hamburger .bar3 {
   right: 0;
+  top: 1px;
 }
-#nav-hamburger .bar4 {
-  bottom: 0;
-}
-#nav-check:checked + label > #nav-hamburger > .bar1 {
-  transform: rotate(45deg);
-  transform-origin: 5%;
-  width: 31px;
-}
-#nav-check:checked + label > #nav-hamburger > .bar2 {
-  transform: translateX(-40px);
-  background-color: transparent;
-}
-#nav-check:checked + label > #nav-hamburger > .bar3 {
-  transform: translateX(40px);
-  background-color: transparent;
-}
-#nav-check:checked + label > #nav-hamburger > .bar4 {
-  transform-origin: 5%;
-  transform: rotate(-45deg);
-  width: 31px;
+.hamburger[aria-expanded="true"] + .menu {
+  height: 14.4em; /* not convinced by this as it is a predefined height - this should be a calculation of all the menu items*/
 }
 
 div.msg {
@@ -489,7 +504,7 @@ span.pseudo-button {
   padding: 10px 0 0;
 }
 .block-msg {
-  padding: var(--ac-padding);
+  padding: 0.5rem 1rem;
   background: var(--ac-color1-light);
   color: #333;
   border-bottom: 1px solid var(--ac-border-color);
@@ -654,7 +669,15 @@ http://huebee.buzz
 .huebee__close-button:hover .huebee__close-button__x {
   stroke: #222;
 }
-
+.settings-colors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.settings-sticky {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 60px;
+}
 @media all and (min-width: 480px) {
   :root {
     --ac-border-radius: 6px;
@@ -703,31 +726,45 @@ http://huebee.buzz
 }
 
 @media (min-width: 800px) {
-  #nav-hamburger,
-  #nav-check {
-    display: none;
+  :root {
+    --hamburger-display: none;
+  }
+  .header {
+    position: sticky;
+    max-width: var(--main-w);
+    z-index: 2;
+    top: 0;
+    width: inherit;
+    border: 1px solid var(--bg-body);
+    color: var(--bg-body);
   }
   nav {
-    position: relative;
-    flex: 1 1 100%;
-    top: 0;
-    right: auto;
-    text-align: right;
     margin-left: auto;
-    background: transparent;
-    border: none;
   }
-  nav ul {
-    max-height: 100%;
-
+  .menu {
+    margin: 20px 0 0 auto;
     padding: 0;
-    transition: all 0s;
-    display: flex;
+    height: auto;
     align-items: center;
-    justify-content: space-evenly;
+    flex-direction: row;
+    gap: 0.3em;
+    border-radius: 0;
+    overflow: visible;
   }
-  nav ul li {
+  .menu li + li {
+    margin-left: 0.5rem;
   }
-  nav ul li a:hover {
+  .menu > * {
+  }
+  .menu a {
+    padding: 0;
+  }
+  .menu li.active a {
+    text-decoration: underline;
+  }
+  .menu li.active a::after,
+  .menu a:hover::after,
+  .menu a:focus::after {
+    display: none;
   }
 }
