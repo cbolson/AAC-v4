@@ -128,10 +128,10 @@ define("AC_INCLUDES_ROOT"	, AC_ROOT."ac-includes/");
 				'.$waring.'
 				<form method="post" action="">
 				<table>
-					'.rowData('<label for="id_title">Database Host</label>'			, '<input type="text" name="db[host]" value="'.AC_DB_HOST.'" placeholder="Database Host eg. Localhost">').'
-					'.rowData('<label for="id_title">Database Name</label>'			, '<input type="text" name="db[name]" value="'.AC_DB_NAME.'" placeholder="Database Name">').'
-					'.rowData('<label for="id_title">Database Username</label>'		, '<input type="text" name="db[username]" value="'.AC_DB_USER.'"" placeholder="Database Username">').'
-					'.rowData('<label for="id_title">Database Password</label>'		, '<input type="text" name="db[password]" value="'.AC_DB_PASS.'"" placeholder="Database Password">').'
+					'.rowData('<label for="db_host">Database Host</label>'			, '<input type="text" id="db_host" name="db[host]" value="'.AC_DB_HOST.'" placeholder="Database Host eg. Localhost">').'
+					'.rowData('<label for="db_name">Database Name</label>'			, '<input type="text" id="db_name" name="db[name]" 	value="'.AC_DB_NAME.'" placeholder="Database Name">').'
+					'.rowData('<label for="db_user">Database Username</label>'		, '<input type="text" id="db_user" name="db[username]" value="'.AC_DB_USER.'"" placeholder="Database Username">').'
+					'.rowData('<label for="db_pass">Database Password</label>'		, '<input type="text" id="db_pass" name="db[password]" value="'.AC_DB_PASS.'"" placeholder="Database Password">').'
 					<tr>
 						<td>&nbsp;</td>
 						<td><input type="submit" class="submit" value="Save/Confirm Configuration"></td>
@@ -173,9 +173,10 @@ if($check_item_states[3]=="ok"){
 	
 	if(isset($_POST["add_config"])){
 		//	insert calendar config
+		//title	= '".mysqli_real_escape_string($db_cal,$_POST["add_config"]["title"])."',
+			
 		$insert="
 		UPDATE `".AC_DB_PREFIX."ac_config` SET 
-			title	= '".mysqli_real_escape_string($db_cal,$_POST["add_config"]["title"])."',
 			cal_url = '".mysqli_real_escape_string($db_cal,$_POST["add_config"]["cal_url"])."'
 		WHERE id=1 LIMIT 1
 		";
@@ -217,17 +218,17 @@ if($check_item_states[3]=="ok"){
 	}else{
 	
 		//	define calendar configuration settings
-		
+		//				'.rowData('<label for="id_title">Calendar Title</label>' 		, '<input id="id_title" 	type="text" 	name="add_config[title]" value="'.$row_config["title"].'" style="width:300px;" />').'
+
 		$cal_config_form='
 		Define your calendar options:
 		<div style="padding:20px;">
 			<form method="post" action="" >
 			<input type="hidden" name="add_config" value="1">
 			<table>
-				'.rowData('<label for="email">Admin Email</label>' 				, '<input id="email" 		type="email" 	name="add_user[email]" required placeholder="your@email.com" style="width:300px;" />').'
-				'.rowData('<label for="pass">Password</label>' 					, '<input id="pass" 		type="password" name="add_user[pass]" required style="width:300px;" />').'
-				'.rowData('<label for="id_title">Calendar Title</label>' 		, '<input id="id_title" 	type="text" 	name="add_config[title]" value="'.$row_config["title"].'" style="width:300px;" />').'
-				'.rowData('<label for="id_cal_url">Local Calendar root</label>'	, '<input id="id_cal_url" 	type="text" 	name="add_config[cal_url]" value="'.dirname($_SERVER["SCRIPT_NAME"]).'" style="width:150px;" /> <span class="note">'.$lang["note_cal_url"].'</span>').'
+				'.rowData('<label for="user_email">Admin Email</label>' 		, '<input id="email" 	type="email" 	id="user_name" name="add_user[email]" required placeholder="your@email.com" style="width:300px;" />').'
+				'.rowData('<label for="user_pass">Password</label>' 			, '<input id="pass" 	type="password" id="user_email" name="add_user[pass]" required style="width:300px;" />').'
+				'.rowData('<label for="cal_url">Local Calendar root</label>'	, '<input id="cal_url" 	type="text" 	id="cal_url" name="add_config[cal_url]" value="'.dirname($_SERVER["SCRIPT_NAME"]).'" style="width:150px;" /> <span class="note">'.$lang["note_cal_url"].'</span>').'
 				<tr>
 					<td>&nbsp;</td>
 					<td><input type="submit" class="submit" value="Save Configuration" style="width:240px;"></td>
@@ -383,14 +384,14 @@ function create_tables(){
 	//	Table structure for table `bookings_admin`
 	$sql["Create Table - ADMIN"]="
 	CREATE TABLE IF NOT EXISTS `".AC_DB_PREFIX."ac_users` (
-	  	`id` int(11) NOT NULL,
+	  	`id` int(11) NOT NUL  auto_increment,
 		`level` tinyint(1) NOT NULL DEFAULT '2',
 		`username` varchar(20) NOT NULL DEFAULT '',
 		`password` varchar(32) NOT NULL DEFAULT '',
 		`email` varchar(100) DEFAULT NULL,
 		`default_lang` char(2) NOT NULL DEFAULT 'en',
 		`state` tinyint(1) NOT NULL DEFAULT '1',
-		`date_visit` datetime NOT NULL,
+		`date_visit` datetime  DEFAULT NULL,
 		`visits` int(11) NOT NULL DEFAULT '0',
 		PRIMARY KEY  (`id`)
 	) ENGINE=MyISAM AUTO_INCREMENT=2 ;
@@ -453,7 +454,7 @@ function create_tables(){
 	CREATE TABLE `".AC_DB_PREFIX."ac_items` (
 	`id` int(11) NOT NULL auto_increment,
 	`id_user` int(11) NOT NULL default '1',
-	`id_ref_external` int(11) NOT NULL COMMENT 'link to external db table',
+	`id_ref_external` varchar(100) NULL COMMENT 'link to external db table',
 	`desc_en` varchar(100) NOT NULL default '',
 	`desc_es` varchar(100) NOT NULL default '',
 	`list_order` int(11) NOT NULL default '0',
@@ -479,7 +480,7 @@ function create_tables(){
 	// Languages (new in version 4)
 	$sql["Create Table - LANGUAGES"]="
 	CREATE TABLE `ac_languages` (
-		`id` int(11) NOT NULL,
+		`id` int(11) NOT NULL auto_increment ,
 		`code` char(2) NOT NULL,
 		`description` varchar(50) NOT NULL,
 		`state` tinyint(1) NOT NULL DEFAULT '1',
@@ -534,7 +535,7 @@ function create_tables(){
 	// translations (new in version 4)
 	$sql["Create table - TRANSLATIONS"] = "
 	CREATE TABLE `".AC_DB_PREFIX."ac_translations` (
-	`id` int(11) NOT NULL,
+	`id` int(11) NOT NULL auto_increment,
 	`type` char(20) NOT NULL DEFAULT 'texts',
 	`id_text` int(11) DEFAULT NULL,
 	`langcode` char(2) DEFAULT 'en',
@@ -1012,7 +1013,7 @@ function create_tables(){
 	// texts
 	$sql["Create Table - TEXTS"]="
 	CREATE TABLE `".AC_DB_PREFIX."ac_texts` (
-		`id` int(11) NOT NULL AUTO_INCREMENT,
+		`id` int(11) NOT NULL auto_increment,
 		`code` char(50) DEFAULT NULL,
   		`state` tinyint(1) NOT NULL DEFAULT '1',
 		PRIMARY KEY (`id`)

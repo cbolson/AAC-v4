@@ -73,13 +73,13 @@ foreach($styles AS $key=>$val){
 }
 
 
-
+// '.fieldRow($ac_lang["title"]					, 'title'			, '<input type="text" 	id="title" 			name="mod[title]" 			value="'.$row_config["title"].'" >').'
+	
 $contents.='
 <div class="block">
 	<form method="post" action="">
 		<input type="hidden" name="page" value="'.AC_PAGE.'">
-		'.fieldRow($ac_lang["title"]					, 'title'			, '<input type="text" 	id="title" 			name="mod[title]" 			value="'.$row_config["title"].'" >').'
-		'.fieldRow($ac_lang["cal_url"] 					, 'cal_url'			, '<input type="text" 	id="cal_url" 		name="mod[cal_url]" 		value="'.$row_config["cal_url"].'" placeholder="https://">').'
+			'.fieldRow($ac_lang["cal_url"] 					, 'cal_url'			, '<input type="text" 	id="cal_url" 		name="mod[cal_url]" 		value="'.$row_config["cal_url"].'" placeholder="https://">').'
 		'.fieldRow($ac_lang["default_lang"] 			, 'default_lang'	, '<select 				id="default_lang"	name="mod[default_lang]" 	style="width:140px;">'.selectListOptions($ac_languages,$row_config["default_lang"]).'</select> <a href="?p=settings&action=new_lang">'.$ac_lang["bt_new_language"].'</a>').'
 		'.fieldRow($ac_lang["min_nights"] 				, 'min_nights'		, '<input type="number" id="min_nights"		name="mod[min_nights]"		value="'.$row_config["min_nights"].'" min="0" max="100" style="width:140px;">').'
 		<h2>'.$ac_lang["styles"].'</h2>

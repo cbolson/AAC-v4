@@ -58,6 +58,8 @@ if(isset($_POST["mod"])){
 
 //	add new item
 if(isset($_POST["add"])){
+	//print_arr($_POST);
+	//$_POST["add"]["date_visit"] = '0000-00-00 00:00:00';
 	if (!filter_var($_POST["add"]["email"], FILTER_VALIDATE_EMAIL)) {
 		$msg		= $ac_lang["msg_email_KO"];
 		$msg_type	= 'alert';
@@ -88,9 +90,9 @@ if(isset($_REQUEST["action"])){
 			<div class="block">
 				<form method="POST">
 					'.fieldRow($ac_lang["level"]			, 'level'		, '<select id="level" name="add["level"]" style="width:300px;">'.selectListOptions($admin_levels,2).'</select><span class="note">'.$ac_lang["note_admin_level"].'</span>').'
-					'.fieldRow($ac_lang["email"]			, 'email'		, '<input type="email" id="email" name="add[email]" 			required>').'
-					'.fieldRow($ac_lang["password"]			, 'password'	, '<input type="password" id="password" name="password" 		required autocomplete="off" minlength="8" maxlength="15">').'
-					'.fieldRow($ac_lang["password_repeat"]	, 'password2'	, '<input type="password" id="password" name="password-repeat"  required autocomplete="off" minlength="8" maxlength="15" placeholder="'.$ac_lang["note_password_repeat"].'">').'
+					'.fieldRow($ac_lang["email"]			, 'email'		, '<input type="email" id="email" name="add[email]" value=""	required autocomplete="off">').'
+					'.fieldRow($ac_lang["password"]			, 'password'	, '<input type="password" id="password" name="password" 		required autocomplete="off" minlength="7" maxlength="15">').'
+					'.fieldRow($ac_lang["password_repeat"]	, 'password2'	, '<input type="password" id="password" name="password-repeat"  required autocomplete="off" minlength="7" maxlength="15" placeholder="'.$ac_lang["note_password_repeat"].'">').'
 					'.fieldRowButton('<input type="submit" value="'.$ac_lang["add"].'">').'
 				</form>
 			</div>
@@ -117,8 +119,8 @@ if(isset($_REQUEST["action"])){
 					'.$row_level.'
 					'.fieldRow($ac_lang["language"]			, 'default_lang', '<select name="mod[default_lang]" style="width:240px;">'.selectListOptions($ac_languages,$row["default_lang"]).'</select>').'
 					'.fieldRow($ac_lang["email"]			, 'email'		, '<input type="email" id="email" name="mod[email]" value="'.$row["email"].'" required>').'
-					'.fieldRow($ac_lang["password"]			, 'password'	, '<input type="password" id="password" name="password" 		autocomplete="off" minlength="8" maxlength="15" size="15" placeholder="'.$ac_lang["note_password_mod"].'">').'
-					'.fieldRow($ac_lang["password_repeat"]	, 'password2'	, '<input type="password" id="password" name="password-repeat"  autocomplete="off" minlength="8" maxlength="15" size="15" placeholder="'.$ac_lang["note_password_repeat"].'">').'
+					'.fieldRow($ac_lang["password"]			, 'password'	, '<input type="password" id="password" name="password" 		autocomplete="off" minlength="7" maxlength="15" size="15" placeholder="'.$ac_lang["note_password_mod"].'">').'
+					'.fieldRow($ac_lang["password_repeat"]	, 'password2'	, '<input type="password" id="password" name="password-repeat"  autocomplete="off" minlength="7" maxlength="15" size="15" placeholder="'.$ac_lang["note_password_repeat"].'">').'
 					'.fieldRowButton('<input type="submit" value="'.$ac_lang["save"].'">'.$bt_delete.'').'
 				</form>
 			</div>

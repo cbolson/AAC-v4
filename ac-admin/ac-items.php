@@ -14,10 +14,12 @@ $txt_type 	= "item";
 
 //	add new item
 if(isset($_POST["add"])){
+	print_arr($_POST["add"]);
 	//	define next list order
-	$_POST["add"]["list_order"]	=getNextOrder($this_table);
-	$_POST["add"]["id_user"]	=$_SESSION["admin"]["id"];
-	
+	$_POST["add"]["list_order"]	= getNextOrder($this_table);
+	$_POST["add"]["id_user"]	= $_SESSION["admin"]["id"];
+	//if($_POST["add"]["id_ref_external"]==='') $_POST["add"]["id_ref_external"] = NULL;
+
 	if(addItem($this_table,$_POST["add"],true))	{
 		$id_item=mysqli_insert_id($db_cal);
 		
