@@ -1,11 +1,11 @@
 <?php
 /*
-Script		:	Ajax availability calendar www.ajaxavailabilitycalendar.com
-Author		: 	Chris Bolson www.cbolson.com
+Script		: Ajax availability calendar www.ajaxavailabilitycalendar.com
+Author		: Chris Bolson www.cbolson.com
 
-File		: 	ac-nav.inc.php
-Use			: 	define admin nav items according to user level
-				define current page variables
+File		:  ac-nav.inc.php
+Use			: define admin nav items according to user level
+			  define current page variables
 */	
 
 
@@ -91,36 +91,18 @@ foreach($nav_items AS $nav_type=>$nav_data){
 //	create menu
 if(!empty($list_nav_items)){
 	$block_nav='
-	
 	<nav>
-						<button id="hamburger" class="hamburger" aria-controls="primary-navigation" aria-expanded="false" aria-label="Menu">
-							<svg class="hamburger" viewBox="0 0 100 100" width="30">
-								<rect class="line line__top" width="80" height="10" x="10" y="25" rx="5"></rect>
-								<rect class="line line__middle" width="80" height="10" x="10" y="45" rx="5"></rect>
-								<rect class="line line__bottom" width="80" height="10" x="10" y="65" rx="5"></rect>
-							</svg>
-						</button>
-						<ul id="primary-navigation" class="menu">
-							'.$list_nav_items.'
-						</ul>
-					</nav>
-
-	';
-}
-/*
-<input type="checkbox" id="nav-check">
-	<label for="nav-check">
-		<div id="nav-hamburger">
-			<span class="bar bar1"></span>
-			<span class="bar bar2"></span>
-			<span class="bar bar3"></span>
-			<span class="bar bar4"></span>
-		</div>
-	</label>
-	<nav>
-		<ul id="nav-menu" class="list-unstyled align-items-center d-md-flex m-0 p-0">
+		<button id="hamburger" class="hamburger" aria-controls="primary-navigation" aria-expanded="false" aria-label="Menu">
+			<svg class="hamburger" viewBox="0 0 100 100" width="30">
+				<rect class="line line__top" width="80" height="10" x="10" y="25" rx="5"></rect>
+				<rect class="line line__middle" width="80" height="10" x="10" y="45" rx="5"></rect>
+				<rect class="line line__bottom" width="80" height="10" x="10" y="65" rx="5"></rect>
+			</svg>
+		</button>
+		<ul id="primary-navigation" class="menu">
 			'.$list_nav_items.'
 		</ul>
 	</nav>
-*/
+	';
+}
 ?>

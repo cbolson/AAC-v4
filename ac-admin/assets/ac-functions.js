@@ -1,15 +1,3 @@
-// responsive nav
-const hamburger = document.querySelector("#hamburger");
-
-hamburger.addEventListener("click", () => {
-  const isOpened = hamburger.getAttribute("aria-expanded") === "true";
-  if (isOpened ? toggleMenu("false") : toggleMenu("true"));
-});
-
-function toggleMenu(state) {
-  hamburger.setAttribute("aria-expanded", `${state}`);
-}
-
 // arr icons for item states
 const icons = {
   0: '<svg class="icon icon-cross"><use xlink:href="assets/symbol-defs.svg#icon-cross"></use></svg>',
@@ -63,5 +51,17 @@ document.addEventListener("DOMContentLoaded", function () {
   // add click event to state elements
   for (var i = 0; i < $elStates.length; i++) {
     $elStates[i].addEventListener("click", updateState, false);
+  }
+
+  // responsive nav
+  const hamburger = document.querySelector("#hamburger");
+
+  hamburger.addEventListener("click", () => {
+    const isOpened = hamburger.getAttribute("aria-expanded") === "true";
+    if (isOpened ? toggleMenu("false") : toggleMenu("true"));
+  });
+
+  function toggleMenu(state) {
+    hamburger.setAttribute("aria-expanded", `${state}`);
   }
 });

@@ -14,7 +14,7 @@ $txt_type 	= "item";
 
 //	add new item
 if(isset($_POST["add"])){
-	print_arr($_POST["add"]);
+	//print_arr($_POST["add"]);
 	//	define next list order
 	$_POST["add"]["list_order"]	= getNextOrder($this_table);
 	$_POST["add"]["id_user"]	= $_SESSION["admin"]["id"];
