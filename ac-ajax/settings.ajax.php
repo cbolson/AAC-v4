@@ -10,7 +10,7 @@ Use			: get calendar settings such as styles and texts to be sent to js file for
 */
 
 // get vars sent (GET)
-$lang = isset($_GET["lang"]) ? $_GET["lang"] : AC_DEFAULT_AC_LANG;
+$lang = isset($_GET["lang"]) ? $_GET["lang"] : "en";
 define("AC_LANG",$lang);
 
 

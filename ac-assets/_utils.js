@@ -1,6 +1,6 @@
 // add defined class to element
 export function createEl(elType) {
-  return document.createElement(`${elType}`);
+  return document.createElement(elType);
 }
 // add defined class to element
 export function addClass(el, className) {

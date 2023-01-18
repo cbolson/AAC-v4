@@ -1,10 +1,9 @@
 /*
 Script		:	Ajax availability calendar www.ajaxavailabilitycalendar.com
-Wuthor		: Chris Bolson www.cbolson.com
+Author		: Chris Bolson www.cbolson.com
 
 File		  : ac-functions.inc.js
-Date add	: 2021-10-13
-Date mod  : 2023-01-02
+Date mod  : 2023-01-18
 Use			  : All javascript calendar functions
 */
 
@@ -55,7 +54,7 @@ let acStartDate = ""; // empty for initial load, will be overwritten once calend
 let fieldDateStart = "";
 let fieldDateEnd = "";
 let dateStartSet = false;
-
+let errors = false; // if an error is detected whilst retrieving and defining data this will be set to "true" and prevent the calendar from being rendered
 // admin defined settings (over written below)
 let settings,
   minNightsAllowed = 0,
@@ -84,7 +83,14 @@ addClass(weekDaysNumbersEl, "ac-days");
 
 // insert error message into dom
 function displayError({ msg, code }) {
-  const acWrapper = document.querySelector(`#${acWrapperID}`);
+  let msgLocation;
+  if (code == "0.01") {
+    // this error code means that the calendar wrapper has not been defined to we just append the message to the body
+    msgLocation = document.querySelector("body");
+  } else {
+    msgLocation = document.querySelector(`#${acWrapperID}`);
+  }
+  //console.log(msgLocation);
   const msgEl = createEl("div");
   addStyles(msgEl, {
     border: "1px solid red",
@@ -93,8 +99,9 @@ function displayError({ msg, code }) {
     borderRadius: ".25rem",
     marginBlock: ".25rem",
   });
-  msgEl.innerHTML = `error ${code}: ${msg}`;
-  acWrapper.append(msgEl);
+  msgEl.innerHTML = `error ${code}:<br> ${msg}`;
+  msgLocation.prepend(msgEl);
+  errors = true; // prevent calendar from being rendered
 }
 
 // show spinner or "today" text
@@ -108,16 +115,25 @@ function showSpinner(show) {
   const paramsString = `lang=${acLang}`;
   const searchParams = new URLSearchParams(paramsString);
   const response = await fetch(urlSettings + searchParams);
-  settings = await response.json();
+  console.log(response);
+  if (!response.ok) {
+    return displayError({
+      msg: "Unable to find calendar settings file",
+      code: "0.03",
+    });
+  } else {
+    settings = await response.json();
 
-  defineSettings(settings);
+    if (settings.error) {
+      return displayError(settings.error);
+    }
+
+    // write styles to document head
+    if (!errors) defineSettings();
+  }
 })();
 
-function defineSettings(settings) {
-  if (settings.error) {
-    return displayError(settings.error);
-  }
-
+function defineSettings() {
   // define texts & settings
   txtToday = settings.texts["today"];
   txtBack = settings.texts["back"];
@@ -126,18 +142,12 @@ function defineSettings(settings) {
   txtDateEendKO = settings.texts["end_before_start"];
   txtDatesNotAvailable = settings.texts["dates_not_available"];
   minNightsAllowed = settings.min_nights;
-  // weekday titles
-  for (let j = 1; j < 8; j++) {
-    let li = weekDayEl.cloneNode(true);
-    li.textContent = settings.texts["day_" + j + ""];
-    weekDayTitlesEl.appendChild(li);
-  }
-  // write styles to document head
+
   renderHeader();
 }
 
 // create header, fetch main colors from db and include style sheet
-const renderHeader = function () {
+function renderHeader() {
   const head = document.getElementsByTagName("HEAD")[0];
   let styles = settings.styles;
 
@@ -172,10 +182,10 @@ const renderHeader = function () {
 
   // load calendar once we have the styles etc.
   buildCalendarWrapper();
-};
+}
 
 // create wrapper to hold calendar months
-const buildCalendarWrapper = function () {
+function buildCalendarWrapper() {
   // calendar wrapper on parent page
   acWrapper = document.querySelector(`#${acWrapperID}`);
 
@@ -211,6 +221,13 @@ const buildCalendarWrapper = function () {
   acNumMonthsEl.setAttribute("id", "ac-months");
   acNumMonthsEl.innerHTML = '</div><div id="ac-months"></div>';
 
+  // weekday titles
+  for (let j = 1; j < 8; j++) {
+    const li = weekDayEl.cloneNode(true);
+    li.textContent = settings.texts["day_" + j + ""];
+    weekDayTitlesEl.appendChild(li);
+  }
+
   // remove any existing contents from calendar wrapper
   acWrapper.innerHTML = "";
 
@@ -226,7 +243,7 @@ const buildCalendarWrapper = function () {
   addNavControls();
   // load calendar
   loadCal(direction);
-};
+}
 
 // add calendar "back" and "next" button events
 function addNavControls() {
@@ -334,12 +351,10 @@ function setDate() {
     dateStartSet = true;
 
     // add start date class to this date
-    if (this.classList.contains("booked-am")) {
-      // end date is already set as start date for separate booking
-      addClass(this, "date-select-start-pm");
-    } else {
-      addClass(this, "date-select-start");
-    }
+
+    this.classList.contains("booked-am")
+      ? addClass(this, "date-select-start-pm")
+      : addClass(this, "date-select-start");
   } else {
     // setting end date - need to check and highlight dates between
     let dateMove = new Date(startDate);
@@ -374,12 +389,9 @@ function setDate() {
       }
 
       // add selected class
-      if (this.classList.contains("booked-pm")) {
-        // end date is already set as start date for separate booking
-        addClass(this, "date-select-end-am");
-      } else {
-        addClass(this, "date-select-end");
-      }
+      this.classList.contains("booked-pm")
+        ? addClass(this, "date-select-end-am")
+        : addClass(this, "date-select-end");
 
       // reset click to make next date start date again
       dateStartSet = false;
@@ -410,12 +422,9 @@ function highlightDates() {
         // move date foward by one day
         dateMove.setDate(dateMove.getDate() + 1);
       }
-      if (this.classList.contains("booked-pm")) {
-        // end date is already set as start date for separate booking
-        addClass(this, "date-select-end-am");
-      } else {
-        addClass(this, "date-select-end");
-      }
+      this.classList.contains("booked-pm")
+        ? addClass(this, "date-select-end-am")
+        : addClass(this, "date-select-end");
     }
   }
 }
@@ -438,7 +447,10 @@ function loadCal(direction) {
     let response = await fetch(urlCal + searchParams);
     // If the call failed, throw an error
     if (!response.ok) {
-      throw "Error getting month data";
+      return displayError({
+        msg: "Unable to read month data",
+        code: "0.04",
+      });
     } else {
       // Otherwise, get the post JSON
       const data = await response.json();
@@ -539,22 +551,21 @@ function deviceDetect() {
 document.addEventListener("DOMContentLoaded", function () {
   // DOM container for calendar is required
   if (acWrapperID == "KO") {
-    alert(
-      "You must define the ID of the document element where the calendar is to be placed"
-    );
-    return;
+    return displayError({
+      msg: "You must define the ID of the document element where the calendar is to be placed",
+      code: "0.01",
+    });
   }
   // item ID is required
   if (acItemID == "KO") {
-    alert("You must define the ID of the calendar to be shown");
-    return;
+    return displayError({
+      msg: "You must define the ID of the calendar to be shown",
+      code: "0.02",
+    });
   }
 
   // check if mobile
   isMobile = deviceDetect();
-
-  // load calender settings and add styles to head then finally initialize the calendar
-  //getSettings();
 
   // detect window resize and call reloadOnResize function
   window.addEventListener("resize", debounce(reloadOnResize, 150));
