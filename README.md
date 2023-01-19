@@ -11,6 +11,9 @@ Ajax Availability Calendar version 4.01.02
 I have made it public so that you can see the progress and make any suggestions you may feel necessary.
 
 NOTES:
+
 Before installing you need rename these files:
+
 DEFAULT-ac-config.inc.php > config.inc.php
+
 DEFAULT-ac.install.php > "ac-install.php
