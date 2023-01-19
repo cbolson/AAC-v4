@@ -202,20 +202,20 @@ if(!function_exists("drawCalJSON")){
 		
 			//TESTING
 			
-			if($start_month==date("m", strtotime('+2 months'))){
-				//if($this_day_counter==12){
-				if( ($this_day_counter >11) && ($this_day_counter <14)){
-					$this_day_classes.='booked,';
-					$this_date_state='BOOKED';
-				}
-				if($this_day_counter==14){
-					$this_day_classes.='booked-am,';
-					$this_date_state='BOOKED pm';
-				}
-				if($this_day_counter==11){
-					$this_day_classes.='booked-pm,';
-				}
-			}
+			// if($start_month==date("m", strtotime('+2 months'))){
+			// 	//if($this_day_counter==12){
+			// 	if( ($this_day_counter >11) && ($this_day_counter <14)){
+			// 		$this_day_classes.='booked,';
+			// 		$this_date_state='BOOKED';
+			// 	}
+			// 	if($this_day_counter==14){
+			// 		$this_day_classes.='booked-am,';
+			// 		$this_date_state='BOOKED pm';
+			// 	}
+			// 	if($this_day_counter==11){
+			// 		$this_day_classes.='booked-pm,';
+			// 	}
+			// }
 			
 			
 			
