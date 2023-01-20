@@ -203,28 +203,24 @@ async function buildCalendarWrapper() {
 
   // element - nav[back]
   const acNavBackEl = createEl("li");
-  acNavBackEl.classList.add("ac-nav-bt", "back");
   acNavBackEl.setAttribute("data-direction", "back");
   acNavBackEl.setAttribute("title", "" + txtBack + "");
   acNavBackEl.innerHTML = "&#x276E;"; // <
 
   // element -  nav[next]
   const acNavNextEl = createEl("li");
-  acNavNextEl.classList.add("ac-nav-bt", "next");
   acNavNextEl.setAttribute("data-direction", "next");
   acNavNextEl.setAttribute("title", "" + txtNext + "");
   acNavNextEl.innerHTML = "&#x276F;"; // ">""
 
   // element - loader (today & spinner)
   acNavLoadingEl = createEl("li");
-  acNavLoadingEl.classList.add("ac-nav-bt", "today", "loader");
+  acNavLoadingEl.classList.add("loader");
   acNavLoadingEl.setAttribute("data-direction", "today");
 
   // el - month wrapper
   acNumMonthsEl = createEl("div");
   acNumMonthsEl.setAttribute("id", "ac-months");
-  acNumMonthsEl.innerHTML = '</div><div id="ac-months"></div>';
-
   // weekday titles
   for (let j = 1; j < 8; j++) {
     const li = weekDayEl.cloneNode(true);
