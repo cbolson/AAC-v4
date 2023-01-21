@@ -43,7 +43,7 @@
   color: #333;
 }
 #ac-container {
-  margin: 0 auto;
+  margin-inline: auto;
 }
 #ac-container ul#ac-nav {
   display: block;

@@ -1,6 +1,8 @@
 // add defined class to element
-export function createEl(elType) {
-  return document.createElement(elType);
+export function createEl(elType, className = "") {
+  const el = document.createElement(elType);
+  if (className) el.classList.add(`${className}`);
+  return el;
 }
 // add defined class to element
 export function addClass(el, className) {
@@ -16,7 +18,8 @@ export function debounce(func, time) {
     timer = setTimeout(func, time, event);
   };
 }
-export const addStyles = (node, styles) =>
+
+export const addInlineStyles = (node, styles) =>
   Object.keys(styles).forEach((key) => (node.style[key] = styles[key]));
 
 // device detection - we are only interested if it is a mobile device or not
@@ -38,3 +41,9 @@ function deviceDetect() {
 
 // check if mobile
 export const isMobile = deviceDetect();
+
+export function datediff(first, second) {
+  // Take the difference between the dates and divide by milliseconds per day.
+  // Round to nearest whole number to deal with DST.
+  return Math.round((second - first) / (1000 * 60 * 60 * 24));
+}
