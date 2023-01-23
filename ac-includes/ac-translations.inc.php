@@ -4,9 +4,8 @@ Script		: Ajax availability calendar www.ajaxavailabilitycalendar.com
 Author		: Chris Bolson www.cbolson.com
 
 File		: ac-translations.inc.php
-Date add	: 2021-09-20
 Date mod	: 2023-01-03
-Use			: define array of translations according to language defined
+Use			: get texts from db and define array
 */
 
 // create array of local translations

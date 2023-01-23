@@ -111,18 +111,19 @@ if(isset($_REQUEST["action"])){
 	switch($_REQUEST["action"]){
 		case "new":
 			$contents.='
-			'.blockMsg($ac_lang["note_text_add"],"advice").'
-			<div class="block">
-				<form method="post" id="item_form">
+			<form method="post" id="item_form">
+				<div class="block">
 					'.fieldRow($ac_lang["code"],'code','<input type="text" id="code" name="add[code]"><spam class="note">'.$ac_lang["note_text_code"].'</span>').'
 					';
 					foreach($ac_languages AS $langcode=>$langdesc){
 						$contents.=fieldRow($langdesc,'add_lang_'.$langcode.'','<input type="text" id="add_lang_'.$langcode.'" name="add_lang['.$langcode.']" required>');
 					}
 					$contents.='
-					'.fieldRowButton('<input type="submit" value="'.$ac_lang["add"].'">').'
-				</form>
-			</div>
+				</div>
+				<div class="block-buttons">
+					<input type="submit" value="'.$ac_lang["add"].'">
+				</div>
+			</form>
 			';
 			break;
 		case "edit":
@@ -139,23 +140,26 @@ if(isset($_REQUEST["action"])){
 					$msg_type="alert";
 				}
 				$contents.='
-				<div class="block">
-					<form method="post" id="item_form">
+				<form method="post" id="item_form">
 					<input type="hidden" name="id" value="'.$item_id.'"> 
 					<input type="hidden" name="orig_code" value="'.$row["code"].'"> 
-					'.fieldRow($ac_lang["code"],'code','<input type="text" id="code" name="mod[code]" value="'.$row["code"].'"><span class="note">'.$ac_lang["note_id_ref_external_mod"].'</span>').'
-					';
-					foreach($ac_languages AS $langcode=>$langdesc){
-						// get lang value from db - use local lang function to get local version OR create new query???
-						$tmp_txt=getTextLocal($row["code"],$langcode,$txt_type,false);
-						if(strlen($tmp_txt)>80) $txt_field='<textarea id="desc_'.$langcode.'" name="mod_lang['.$langcode.']"  required style="width:100%;height:160px;">'.$tmp_txt.'</textarea>';
-						else					$txt_field='<input type="text" id="desc_'.$langcode.'" name="mod_lang['.$langcode.']" value="'.$tmp_txt.'" required>';
-						
-						$contents.=fieldRow($langdesc,'desc_'.$langcode.'',''.$txt_field.'');
-					}
-					$contents.='
-					'.fieldRowButton('<input type="submit" value="'.$ac_lang["save"].'">').'
-				</div>
+					<div class="block">
+						'.fieldRow($ac_lang["code"],'code','<input type="text" id="code" name="mod[code]" value="'.$row["code"].'"><span class="note">'.$ac_lang["note_id_ref_external_mod"].'</span>').'
+						';
+						foreach($ac_languages AS $langcode=>$langdesc){
+							// get lang value from db - use local lang function to get local version OR create new query???
+							$tmp_txt=getTextLocal($row["code"],$langcode,$txt_type,false);
+							if(strlen($tmp_txt)>80) $txt_field='<textarea id="desc_'.$langcode.'" name="mod_lang['.$langcode.']"  required style="width:100%;height:160px;">'.$tmp_txt.'</textarea>';
+							else					$txt_field='<input type="text" id="desc_'.$langcode.'" name="mod_lang['.$langcode.']" value="'.$tmp_txt.'" required>';
+							
+							$contents.=fieldRow($langdesc,'desc_'.$langcode.'',''.$txt_field.'');
+						}
+						$contents.='
+					</div>
+					<div class="block-buttons">
+						<input type="submit" value="'.$ac_lang["save"].'">
+					</div>
+				</form>
 				';
 			}
 			break;
@@ -165,7 +169,7 @@ if(isset($_REQUEST["action"])){
 }else{
 	/// list of all texts
 	// default order
-	$order_by='tt.txt';
+	$order_by='t.code';
 	
 	if(isset($_GET["o"])){
 		switch($_GET["o"]){
@@ -205,19 +209,23 @@ if(isset($_REQUEST["action"])){
 			}
 			$local_txt=$row["local_txt"];
 			if(empty($local_txt))	$local_txt='<span class="note" style="color:red;">'.$ac_lang["not_translated"].'</span>';
+			
+			// check if text has been translated
+			$missing_translations = '';
+			foreach($ac_languages AS $langcode=>$langdesc){
+				$tmp_txt=getTextLocal($row["id"],$langcode,$txt_type,false);
+				if(empty($tmp_txt)){
+					$missing_translations = '<span style="color:red" title="'.$ac_lang["alt_missing_translation"].'">*</span>';	
+					break;
+				}			
+			}
+
+
 			$list_items.='
 			<tr '.$row_class.'>
-				<td class="center">'.$id_item.'</td>
+				<td class="center small-screen-no">'.$missing_translations.$id_item.'</td>
 				<td>'.$row["code"].'</td>
-				';
-				foreach($ac_languages AS $langcode=>$langdesc){
-					// check if text has been translated
-					$tmp_txt=getTextLocal($row["code"],$langcode,$txt_type,false);
-					if(!empty($tmp_txt)) 	$icon=icon("checkmark","","small");
-					else					$icon=icon("cross","","small");
-					$list_items.='<td class="col-lang-translated">'.$icon.'</td>';
-				}
-				$list_items.='<td class="small-screen-no">'.$local_txt.'</td>
+				<td class="small-screen-no">'.$local_txt.'</td>
 				<td class="center">'.activeState($row["state"],$id_item,"texts").'</td>
 				<td class="options">
 					<ul>
@@ -233,20 +241,20 @@ if(isset($_REQUEST["action"])){
 			<table>
 				<thead>
 					<tr>
-						<td class="id"><a href="?p='.AC_PAGE.'&o=id" 		title="'.$ac_lang["order_by"].' : '.$ac_lang["id"].'">'.$ac_lang["id"].'</a></td>
+						<td class="id small-screen-no"><a href="?p='.AC_PAGE.'&o=id" 		title="'.$ac_lang["order_by"].' : '.$ac_lang["id"].'">'.$ac_lang["id"].'</a></td>
 						<td><a href="?p='.AC_PAGE.'&o=code" 	title="'.$ac_lang["order_by"].' : '.$ac_lang["code"].'">'.$ac_lang["code"].'</a></td>
-						';
-						foreach($ac_languages AS $langcode=>$langdesc){
-							$contents.='<td class="col-lang-translated">'.$langcode.'</td>';
-						}
-						$contents.='<td class="small-screen-no"><a href="?p='.AC_PAGE.'&o=value" 	title="'.$ac_lang["order_by"].' : '.$ac_lang["value"].'">'.$ac_lang["value"].'</a> ('.$ac_languages[AC_LANG].')</td>
-						
+						<td class="small-screen-no"><a href="?p='.AC_PAGE.'&o=value" 	title="'.$ac_lang["order_by"].' : '.$ac_lang["value"].'">'.$ac_lang["value"].'</a> ('.$ac_languages[AC_LANG].')</td>
 						<td>'.$ac_lang["state"].'</td>
 						<td><span class="small-screen-no">'.$ac_lang["options"].'</span></td>
 					</tr>
 				</thead>
+				<tbody>
 				'.$list_items.'
+				</tbody>
 			</table>
+		</div>
+		<div class="block-buttons note">
+			'.$ac_lang["note_active_state"].'
 		</div>
 		';
 	}

@@ -100,12 +100,10 @@ if(isset($_POST["delete_it"])){
 	if(deleteItem($this_table,$id_item)){
 		
 		// delete translations
-		// delete previoous translations for this text
+		// delete previous translations for this item
 		$del="DELETE FROM ".AC_TBL_TRANSLATIONS." WHERE type='".$txt_type."' AND id_text=".$id_item."";
 		mysqli_query($db_cal,$del) or die("Error - delete translations");
-	
-	
-	
+		
 		//	delete bookings for this item
 		$del="DELETE FROM ".AC_TBL_AVAIL." WHERE id_item=".mysqli_real_escape_string($db_cal,$id_item)."";
 		mysqli_query($db_cal,$del) or die("Error deleting item bookings");
@@ -124,17 +122,19 @@ if(isset($_REQUEST["action"])){
 	switch($_REQUEST["action"]){
 		case "new":
 			$contents.='
-			<div class="block">
-				<form method="post" id="item_form">
-				'.fieldRow($ac_lang["id_external"],'id_ref_external','<input type="text" id="id_ref_external" name="add[id_ref_external]"  style="width:100px;"><span class="note">'.$ac_lang["note_id_ref_external"].'</span>').'
+			<form method="post" id="item_form">
+				<div class="block">
+					'.fieldRow($ac_lang["id_external"],'id_ref_external','<input type="text" id="id_ref_external" name="add[id_ref_external]"  style="width:100px;"><span class="note">'.$ac_lang["note_id_ref_external"].'</span>').'
 					';
 					foreach($ac_languages AS $langcode=>$langdesc){
 						$contents.=fieldRow($langdesc,'desc_'.$langcode.'','<input type="text" id="desc_'.$langcode.'" name="add_lang['.$langcode.']" required>');
 					}
 					$contents.='
-					'.fieldRowButton('<input type="submit" value="'.$ac_lang["add"].'">').'
-				</form>
-			</div>
+				</div>
+				<div class="block-buttons">
+					<input type="submit" value="'.$ac_lang["add"].'">
+				</div>
+			</form>
 			';
 			break;
 			
@@ -147,22 +147,23 @@ if(isset($_REQUEST["action"])){
 				$msg_type='alert';
 			}else{
 				$contents.='
-				<div class="block">
-					<form method="post" id="item_form">
+				<form method="post" id="item_form">
 					<input type="hidden" name="id" value="'.$item_id.'"> 
-					'.fieldRow($ac_lang["id_external"],'id_ref_external','<input type="text" id="id_ref_external" name="mod[id_ref_external]" value="'.$row["id_ref_external"].'" style="width:100px;"><span class="note">'.$ac_lang["note_id_ref_external"].'</span>').'
-					';
-					foreach($ac_languages AS $langcode=>$langdesc){
-						// get lang value
-						$tmp_txt=getTextLocal($row["id"],$langcode,$txt_type,false);
-						$contents.=fieldRow($langdesc,'desc_'.$langcode.'','<input type="text" id="desc_'.$langcode.'" name="mod_lang['.$langcode.']" value="'.$tmp_txt.'" required>');
-					}
-					$contents.='
-					'.fieldRowButton('
+					<div class="block">
+						'.fieldRow($ac_lang["id_external"],'id_ref_external','<input type="text" id="id_ref_external" name="mod[id_ref_external]" value="'.$row["id_ref_external"].'" style="width:100px;"><span class="note">'.$ac_lang["note_id_ref_external"].'</span>').'
+						';
+						foreach($ac_languages AS $langcode=>$langdesc){
+							// get lang value
+							$tmp_txt=getTextLocal($row["id"],$langcode,$txt_type,false);
+							$contents.=fieldRow($langdesc,'desc_'.$langcode.'','<input type="text" id="desc_'.$langcode.'" name="mod_lang['.$langcode.']" value="'.$tmp_txt.'" required>');
+						}
+						$contents.='
+					</div>
+					<div class="block-buttons">
 						<input type="submit" value="'.$ac_lang["save"].'"> 
 						<a href="?p='.AC_PAGE.'&action=delete&id='.$item_id.'" title="'.$ac_lang["delete"].'" class="icon-button">'.icon("bin").'</a>
-					').'
-				</div>
+					</div>
+				</form>
 				';
 			}
 			break;
@@ -177,10 +178,10 @@ if(isset($_REQUEST["action"])){
 				$msg_type='alert';
 			}else{
 				$contents.='
-				<div class="block">
-					<form method="post" onSubmit="return confirm(\''.$ac_lang["msg_delete_confirm"].'\');">
-						<input type="hidden" name="delete_it" value="1">
-						<input type="hidden" name="id" value="'.$_REQUEST["id"].'"> 
+				<form method="post" onSubmit="return confirm(\''.$ac_lang["msg_delete_confirm"].'\');">
+					<input type="hidden" name="delete_it" value="1">
+					<input type="hidden" name="id" value="'.$_REQUEST["id"].'"> 
+					<div class="block">
 						'.fieldRowData($ac_lang["id_external"],$row["id_ref_external"]).'
 						';
 						foreach($ac_languages AS $langcode=>$langdesc){
@@ -189,9 +190,11 @@ if(isset($_REQUEST["action"])){
 							$contents.=fieldRowData($langdesc,'desc_'.$langcode.'',$tmp_txt);
 						}
 						$contents.='
-						'.fieldRowButton('<input type="submit" value="'.$ac_lang["delete"].'">').'
-					</form>
-				</div>
+					</div>
+					<div class="block-buttons">
+						<input type="submit" value="'.$ac_lang["bt_delete"].'">
+					</div>
+				</form>
 				';
 			}
 			break;
@@ -246,24 +249,30 @@ if(isset($_REQUEST["action"])){
 			$local_txt=$row["local_txt"];
 			if(empty($local_txt))	$local_txt='<span class="note" style="color:red;">'.$ac_lang["not_translated"].'</span>';
 			
-			
+			// check if text has been translated
+			/*
+			NOTE:
+				As potentially the calendar may have many languages it would be too much to show all the lang columns here
+				We will highlight the row if it is missing a translation
+			*/
+			$missing_translations = '';
+			foreach($ac_languages AS $langcode=>$langdesc){
+				$tmp_txt=getTextLocal($row["id"],$langcode,$txt_type,false);
+				if(empty($tmp_txt)){
+					$missing_translations = '<span style="color:red" title="'.$ac_lang["alt_missing_translation"].'">*</span>';	
+					break;
+				}			
+			}
+
+
 			$list_items.='
 			<tr '.$row_class.'>
-				<td class="center">'.$id_item.'</td>
-				';
-				foreach($ac_languages AS $langcode=>$langdesc){
-					// check if text has been translated
-					$tmp_txt=getTextLocal($row["id"],$langcode,$txt_type,false);
-					if(!empty($tmp_txt)) 	$icon=icon("checkmark","","small");
-					else					$icon=icon("cross","","small");
-					$list_items.='<td class="col-lang-translated">'.$icon.'</td>';
-				}
-				$list_items.='
+				<td class="center small-screen-no">'.$missing_translations.$id_item.'</td>
 				<td>'.$local_txt.'</td>
 				';
 				if($_SESSION["admin"]["level"]==1){
 					// show item owner
-					$list_items.='<td><a href="?p=users&id='.$row["id_user"].'&action=edit">'.$row["email"].'</a></td>';
+					$list_items.='<td class="small-screen-no"><a href="?p=users&id='.$row["id_user"].'&action=edit">'.$row["email"].'</a></td>';
 				}
 				$list_items.='
 				<td class="center">'.activeState($row["state"],$id_item,"items").'</td>
@@ -283,25 +292,25 @@ if(isset($_REQUEST["action"])){
 			<table>
 				<thead>
 					<tr>
-						<td class="id"><a href="?p='.AC_PAGE.'&o=id" 	title="'.$ac_lang["order_by"].' : '.$ac_lang["id"].'">'.$ac_lang["id"].'</a></td>
-						';
-						foreach($ac_languages AS $langcode=>$langdesc){
-							$contents.='<td class="col-lang-translated">'.$langcode.'</td>';
-						}
-						$contents.='
+						<td class="id small-screen-no"><a href="?p='.AC_PAGE.'&o=id" 	title="'.$ac_lang["order_by"].' : '.$ac_lang["id"].'">'.$ac_lang["id"].'</a></td>
 						<td><a href="?p='.AC_PAGE.'&o=desc" title="'.$ac_lang["order_by"].' : '.$ac_lang["id"].'">'.$ac_lang["title"].'</a></td>
 						';
 						if($_SESSION["admin"]["level"]==1){
 							// show item owner
-							$contents.='<td>'.$ac_lang["admin_level_user"].'</td>';
+							$contents.='<td class="small-screen-no">'.$ac_lang["admin_level_user"].'</td>';
 						}
 						$contents.='
 						<td class="state">'.$ac_lang["state"].'</td>
 						<td class="options"><span class="small-screen-no">'.$ac_lang["options"].'</span></td>
 					</tr>
 				</thead>
+				<tbody>
 				'.$list_items.'
+				</tbody>
 			</table>
+		</div>
+		<div class="block-buttons note">
+			'.$ac_lang["note_active_state"].'
 		</div>
 		';
 	}

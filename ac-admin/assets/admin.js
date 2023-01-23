@@ -22,9 +22,9 @@ urlAjax = newUrl.replace("ac-admin", "ac-ajax") + "admin.ajax.php";
 var updateState = function () {
   let data = {
     action: "mod-state",
-    type: "" + this.getAttribute("data-type") + "",
-    id: "" + this.getAttribute("data-id") + "",
-    state: "" + this.getAttribute("data-state") + "",
+    type: this.getAttribute("data-type"),
+    id: this.getAttribute("data-id"),
+    state: this.getAttribute("data-state"),
   };
   // replace with spinner
   this.innerHTML = icons["loading"];
@@ -46,12 +46,12 @@ var updateState = function () {
 // once doc has loaded
 document.addEventListener("DOMContentLoaded", function () {
   // get all items with update-state class
-  var $elStates = document.getElementsByClassName("update-state");
+  var statesElements = document.querySelectorAll(".update-state");
 
   // add click event to state elements
-  for (var i = 0; i < $elStates.length; i++) {
-    $elStates[i].addEventListener("click", updateState, false);
-  }
+  statesElements.forEach((el) => {
+    el.addEventListener("click", updateState, false);
+  });
 
   // responsive nav
   const hamburger = document.querySelector("#hamburger");

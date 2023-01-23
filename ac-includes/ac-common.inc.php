@@ -4,7 +4,7 @@ Script		: Ajax availability calendar www.ajaxavailabilitycalendar.com
 Author		: Chris Bolson www.cbolson.com
 
 File		: ac-common.inc.php
-Date		: 2021-10-01
+Date mod	: 2023-01-22
 Use			: get calendar configuration data and define constants
 			  get available languages from db
 */

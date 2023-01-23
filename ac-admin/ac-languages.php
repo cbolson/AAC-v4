@@ -96,7 +96,7 @@ if(isset($_POST["mod"])){
 			VALUES 
 				".trim($insert_data,",")."
 			";
-			echo $insert;
+			//echo $insert;
 			mysqli_query($db_cal,$insert) or die("Error - insert texts<br>".mysqli_error($db_cal));
 		}
 	}
@@ -122,17 +122,19 @@ if(isset($_REQUEST["action"])){
 		case "new":
 			$contents.='
 			'.blockMsg($ac_lang["note_lang_add"],"advice").'
-			<div class="block">
-				<form method="post" id="item_form">
+			<form method="post" id="item_form">
+				<div class="block">
 					'.fieldRow($ac_lang["code"],'langcode','<input type="text" id="langcode" name="add[code]" minlength="2" maxlength="2" style="width:60px;" required><spam class="note">'.$ac_lang["note_langcode"].'</span>').'
 					';
 					foreach($ac_languages AS $langcode=>$langdesc){
 						$contents.=fieldRow($langdesc,'add_lang_'.$langcode.'','<input type="text" id="add_lang_'.$langcode.'" name="add_lang['.$langcode.']" required>');
 					}
 					$contents.='
-					'.fieldRowButton('<input type="submit" value="'.$ac_lang["add"].'">').'
-				</form>
-			</div>
+				</div>
+				<div class="block-buttons">
+					<input type="submit" value="'.$ac_lang["add"].'">
+				</div>
+			</form>
 			';
 			break;
 		case "edit":
@@ -158,11 +160,13 @@ if(isset($_REQUEST["action"])){
 					';
 					foreach($ac_languages AS $langcode=>$langdesc){
 						// get lang value
-					$tmp_txt=getTextLocal($row["code"],$langcode,$txt_type,false);
+						$tmp_txt=getTextLocal($row["code"],$langcode,$txt_type,false);
 						$contents.=fieldRow($langdesc,'desc_'.$langcode.'','<input type="text" id="desc_'.$langcode.'" name="mod_lang['.$langcode.']" value="'.$tmp_txt.'" required>');
 					}
 					$contents.='
-					'.fieldRowButton('<input type="submit" value="'.$ac_lang["save"].'">').'
+				</div>
+				<div class="block-buttons">
+					<input type="submit" value="'.$ac_lang["save"].'">
 				</div>
 				';
 			}
@@ -209,19 +213,28 @@ if(isset($_REQUEST["action"])){
 			}
 			$local_txt=$row["local_txt"];
 			if(empty($local_txt))	$local_txt='<span class="note" style="color:red;">'.$ac_lang["not_translated"].'</span>';
+			
+			// check if text has been translated
+			/*
+			NOTE:
+				As potentially the calendar may have many languages it would be too much to show all the lang columns here
+				We will highlight the row if it is missing a translation
+			*/
+			$missing_translations = '';
+			foreach($ac_languages AS $langcode=>$langdesc){
+				$tmp_txt=getTextLocal($row["id"],$langcode,$txt_type,false);
+				if(empty($tmp_txt)){
+					$missing_translations = '<span style="color:red" title="'.$ac_lang["alt_missing_translation"].'">*</span>';	
+					break;
+				}			
+			}
+
+			
 			$list_items.='
 			<tr '.$row_class.'>
-				<td class="center">'.$id_item.'</td>
+				<td class="center small-screen-no">'.$missing_translations.$id_item.'</td>
 				<td class="center">'.$row["code"].'</td>
-				';
-				foreach($ac_languages AS $langcode=>$langdesc){
-					// check if text has been translated
-					$tmp_txt=getTextLocal($row["code"],$langcode,$txt_type,false);
-					if(!empty($tmp_txt)) 	$icon=icon("checkmark","","small");
-					else					$icon=icon("cross","","small");
-					$list_items.='<td class="col-lang-translated">'.$icon.'</td>';
-				}
-				$list_items.='<td>'.$local_txt.'</td>
+				<td>'.$local_txt.'</td>
 				<td class="center">'.activeState($row["state"],$id_item,"languages").'</td>
 				<td class="options">
 					<ul>
@@ -237,20 +250,20 @@ if(isset($_REQUEST["action"])){
 			<table>
 				<thead>
 					<tr>
-						<td class="id"><a href="?p='.AC_PAGE.'&o=id" 		title="'.$ac_lang["order_by"].' : '.$ac_lang["id"].'">'.$ac_lang["id"].'</a></td>
+						<td class="id small-screen-no"><a href="?p='.AC_PAGE.'&o=id" 		title="'.$ac_lang["order_by"].' : '.$ac_lang["id"].'">'.$ac_lang["id"].'</a></td>
 						<td><a href="?p='.AC_PAGE.'&o=code" 	title="'.$ac_lang["order_by"].' : '.$ac_lang["code"].'">'.$ac_lang["code"].'</a></td>
-						';
-						foreach($ac_languages AS $langcode=>$langdesc){
-							$contents.='<td class="col-lang-translated">'.$langcode.'</td>';
-						}
-						$contents.='
 						<td><a href="?p='.AC_PAGE.'&o=value" 	title="'.$ac_lang["order_by"].' : '.$ac_lang["value"].'">'.$ac_lang["value"].'</a> ('.$ac_languages[AC_LANG].')</td>
 						<td>'.$ac_lang["state"].'</td>
 						<td class="options"><span class="small-screen-no">'.$ac_lang["options"].'</span></td>
 					</tr>
 				</thead>
+				<tbody>
 				'.$list_items.'
+				</tbody>
 			</table>
+		</div>
+		<div class="block-buttons note">
+			'.$ac_lang["note_active_state"].'
 		</div>
 		';
 	}

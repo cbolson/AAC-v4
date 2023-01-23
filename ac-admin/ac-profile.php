@@ -45,14 +45,16 @@ if(isset($_POST["mod"])){
 //	get item data
 $row=getItem($this_table,$_SESSION["admin"]["id"]);
 $contents.='
-<div class="block">
-	<form method="POST">
+<form method="POST">
+	<div class="block">
 		'.fieldRow($ac_lang["language"]			, 'default_lang', '<select name="mod[default_lang]">'.selectListOptions($ac_languages,$row["default_lang"]).'</select>').'
 		'.fieldRow($ac_lang["email"]			, 'email'		, '<input type="email" id="email" name="mod[email]" value="'.$row["email"].'" required>').'
 		'.fieldRow($ac_lang["password"]			, 'password'	, '<input type="password" id="password" name="password" 		autocomplete="off" minlength="8" maxlength="15" placeholder="'.$ac_lang["note_password_mod"].'">').'
 		'.fieldRow($ac_lang["password_repeat"]	, 'password2'	, '<input type="password" id="password" name="password-repeat"  autocomplete="off" minlength="8" maxlength="15" placeholder="'.$ac_lang["note_password_repeat"].'">').'
-		'.fieldRowButton('<input type="submit" value="'.$ac_lang["save"].'">').'
-	</form>
-</div>
+	</div>
+	<div class="block-buttons">
+		<input type="submit" value="'.$ac_lang["save"].'">
+	</div>
+</form>
 ';
 ?>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>AjaxAvailabilityCalendar.com - Version 4.01.02 - Demo</title>
+		<link rel="stylesheet" href="demo.css?v=3">
+		<script src="ac-js/ac-calendar-v2.js?v=4.514" type="module" id="ac-cal" ac-container="demo-calendar" ac-item="1"  ac-lang="en"  ac-dateStart="date-start" ac-dateEnd="date-end"></script>
+	</head>
+	<body>
+		<div id="container">
+			<main >
+				<header class="header">
+					<div class="header__logo">
+						<img src="ac-assets/logo-acc.svg" title="Availability Calendar - Admin" width="300">
+					</div>
+					<h1 class="header__title">Development version 4.02.01</h1>
+				</header>
+				<div >
+					<ac-calendar
+						id="my-cal"
+						ac-id="2"
+						ac-lang="en"
+						ac-date-start="date-start"
+						ac-date-end="date-end"
+						ac-months-to-show="0"
+						>
+					</ac-calendar>
+				</div>
+				<div id="block-booking" style="margin-top:20px;">
+					<input type="date" id="date-start" value="" readonly="readonly">
+					<input type="date" id="date-end" value="" 	readonly="readonly" >
+					<button onclick="alert('Demo - send dates');">Submit form</button>
+				</div>
+			</main>
+			<footer>
+				<ul>
+					<li><a href="https://www.ajaxavailabilitycalendar.com" target="_blank">Ajax Availability Calendar</a></li>
+					<li>by <a href="https://www.cbolson.com" target="_blank">cbolson</a></li>
+				</nav>
+			</footer>
+		</div>
+	</body>
+</html>

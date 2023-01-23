@@ -11,13 +11,13 @@ import {
 // define current url
 // this gets the current directory and adds the path to the ajax file.
 // var urlRoot is set in admin where we are loading the calendar - if not defined (ie font-end cal) use current base url as assets are relative to this
-const urlCurrent = typeof urlRoot != "undefined" ? urlRoot : "";
+const urlCalendar = typeof urlRoot != "undefined" ? urlRoot : "";
 // alternative manual method - replace "_calendar_url_" with your calendar url
-//const urlCurrent = typeof(urlRoot) != 'undefined' ? urlRoot : "_calendar_url_/ac-ajax/calendar.ajax.php";
+//const urlCalendar = typeof(urlRoot) != 'undefined' ? urlRoot : "_calendar_url_/ac-ajax/calendar.ajax.php";
 
 // define ajax urls
-const urlCal = `${urlCurrent}ac-ajax/calendar.ajax.php?`;
-const urlSettings = `${urlCurrent}ac-ajax/settings.ajax.php?`;
+const urlAjaxCal = `${urlCalendar}ac-ajax/calendar.ajax.php?`;
+const urlAjaxSettings = `${urlCalendar}ac-ajax/settings.ajax.php?`;
 
 // DOM elements
 let acWrapper,
@@ -66,12 +66,8 @@ const acSpinner =
 // create template to hold calendar
 const acTemplate = document.createElement("template");
 acTemplate.innerHTML = `
-<style>
-.msg{color:red;} /* TO REMOVE */
-</style>
 <div id="ac-container">
-  <span class="msg">Everything in this box forms part of the web component (including this text) - THIS TEXT US FOR TESTING ONLY</span>
-   <ul id="ac-nav">
+  <ul id="ac-nav">
         <li data-direction="back" title="Previous month">&#x276E;</li>
         <li data-direction="today" title="Today" class="loader">Today</li>
         <li data-direction="next" title="Next month">&#x276F;</li>
@@ -107,16 +103,39 @@ class MyCalendar extends HTMLElement {
 
     acWrapper = this.attachShadow({ mode: "open" });
     acWrapper.appendChild(acTemplate.content.cloneNode(true));
+
+    // main calendar container -
+    acContainer = acWrapper.querySelector("#ac-container");
+
+    // element - loader (today & spinner)
+    acNavLoadingEl = acWrapper.querySelector(".loader");
+
+    // element - months will be displayed here
+    acNumMonthsEl = acWrapper.querySelector("#ac-months");
+
+    // define number of months to show according to screen width - DO WE NEED TO DO THIS EVERY TIME ????
+    acNumMonthsElTmp = monthsToShow();
+
+    setUpCalendar();
   }
 }
 // add custom element to the window
 window.customElements.define("ac-calendar", MyCalendar);
 
+// use promises to define and create setting, header etc.  Finally load the calendar data
+async function setUpCalendar() {
+  await getSettings();
+  await defineSettings();
+  await addStyles();
+  await addNavControls();
+  loadCal(direction);
+}
+
 // FETCH calendar settings - this function will call as soon as the dom is ready
-(async function () {
+async function getSettings() {
   const paramsString = `lang=${acLang}`;
   const searchParams = new URLSearchParams(paramsString);
-  const response = await fetch(urlSettings + searchParams);
+  const response = await fetch(urlAjaxSettings + searchParams);
   //console.log(response);
   if (!response.ok) {
     return displayError({
@@ -125,22 +144,10 @@ window.customElements.define("ac-calendar", MyCalendar);
     });
   } else {
     settings = await response.json();
-
     if (settings.error) {
       return displayError(settings.error);
     }
-    // console.log(settings);
-    // write styles to document head
-    if (!errors) setUpCalendar();
   }
-})();
-
-// use promises to define and create setting, header etc.  Finally load the calendar data
-async function setUpCalendar() {
-  await defineSettings();
-  await addStyles();
-  await addNavControls();
-  loadCal(direction);
 }
 
 // define texts & settings
@@ -152,18 +159,6 @@ async function defineSettings() {
   txtDateEndKO = settings.texts["end_before_start"];
   txtDatesNotAvailable = settings.texts["dates_not_available"];
   minNightsAllowed = settings.min_nights;
-
-  // main calendar container -
-  acContainer = acWrapper.querySelector("#ac-container");
-
-  // element - loader (today & spinner)
-  acNavLoadingEl = acWrapper.querySelector(".loader");
-
-  // element - months will be displayed here
-  acNumMonthsEl = acWrapper.querySelector("#ac-months");
-
-  // define number of months to show according to screen width - DO WE NEED TO DO THIS EVERY TIME ????
-  acNumMonthsElTmp = monthsToShow();
 
   // set nav texts and title attribute to settings lang texts
   acContainer
@@ -199,7 +194,7 @@ async function addStyles() {
 
   const styleSheet = createEl("style");
   styleSheet.innerHTML = `
-  @import "ac-assets/ac-style.css?${curTime}";
+  @import "${urlCalendar}ac-css/ac-style.css?${curTime}";
   #ac-container * {
     ${cssStyles}
   }
@@ -232,7 +227,7 @@ function loadCal(direction) {
   };
   const searchParams = new URLSearchParams(params);
   (async function () {
-    let response = await fetch(urlCal + searchParams);
+    let response = await fetch(urlAjaxCal + searchParams);
     // If the call failed, throw an error
     if (!response.ok) {
       return displayError({

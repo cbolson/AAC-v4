@@ -87,15 +87,17 @@ if(isset($_REQUEST["action"])){
 	switch($_REQUEST["action"]){
 		case "new":
 			$contents.='
-			<div class="block">
-				<form method="POST">
+			<form method="POST">
+				<div class="block">
 					'.fieldRow($ac_lang["level"]			, 'level'		, '<select id="level" name="add["level"]" style="width:300px;">'.selectListOptions($admin_levels,2).'</select><span class="note">'.$ac_lang["note_admin_level"].'</span>').'
 					'.fieldRow($ac_lang["email"]			, 'email'		, '<input type="email" id="email" name="add[email]" value=""	required autocomplete="off">').'
 					'.fieldRow($ac_lang["password"]			, 'password'	, '<input type="password" id="password" name="password" 		required autocomplete="off" minlength="7" maxlength="15">').'
 					'.fieldRow($ac_lang["password_repeat"]	, 'password2'	, '<input type="password" id="password" name="password-repeat"  required autocomplete="off" minlength="7" maxlength="15" placeholder="'.$ac_lang["note_password_repeat"].'">').'
-					'.fieldRowButton('<input type="submit" value="'.$ac_lang["add"].'">').'
-				</form>
-			</div>
+				</div>
+				<div class="block-buttons">
+					<input type="submit" value="'.$ac_lang["add"].'">
+				</div>
+			</form>
 			';
 			break;
 		case "edit":
@@ -113,17 +115,21 @@ if(isset($_REQUEST["action"])){
 			}
 			
 			$contents.='
-			<div class="block">
-				<form method="POST">
+			<form method="POST">
 				<input type="hidden" name="id" value="'.$item_id.'"> 
+				<div class="block">
 					'.$row_level.'
 					'.fieldRow($ac_lang["language"]			, 'default_lang', '<select name="mod[default_lang]" style="width:240px;">'.selectListOptions($ac_languages,$row["default_lang"]).'</select>').'
 					'.fieldRow($ac_lang["email"]			, 'email'		, '<input type="email" id="email" name="mod[email]" value="'.$row["email"].'" required>').'
 					'.fieldRow($ac_lang["password"]			, 'password'	, '<input type="password" id="password" name="password" 		autocomplete="off" minlength="7" maxlength="15" size="15" placeholder="'.$ac_lang["note_password_mod"].'">').'
 					'.fieldRow($ac_lang["password_repeat"]	, 'password2'	, '<input type="password" id="password" name="password-repeat"  autocomplete="off" minlength="7" maxlength="15" size="15" placeholder="'.$ac_lang["note_password_repeat"].'">').'
-					'.fieldRowButton('<input type="submit" value="'.$ac_lang["save"].'">'.$bt_delete.'').'
-				</form>
-			</div>
+				</div>
+				<div class="block-buttons">
+					<input type="submit" value="'.$ac_lang["save"].'">
+					'.$bt_delete.'
+				</div>
+			
+			</form>
 			';
 			break;
 		case "delete":
@@ -139,15 +145,17 @@ if(isset($_REQUEST["action"])){
 				$msg_type='alert';
 			}else{
 				$contents.='
-				<div class="block">
-					<form method="post" onSubmit="return confirm(\''.$ac_lang["msg_delete_confirm"].'\');">
-						<input type="hidden" name="delete_it" value="1">
-						<input type="hidden" name="id" value="'.$item_id.'"> 
+				<form method="post" onSubmit="return confirm(\''.$ac_lang["msg_delete_confirm"].'\');">
+					<input type="hidden" name="delete_it" value="1">
+					<input type="hidden" name="id" value="'.$item_id.'"> 
+					<div class="block">
 						'.fieldRowData($ac_lang["id"]	,$row["id"]).'
 						'.fieldRowData($ac_lang["email"],$row["email"]).'
-						'.fieldRowButton('<input type="submit" value="'.$ac_lang["delete"].'">').'
-					</form>
-				</div>
+					</div>
+					<div class="block-buttons">
+						<input type="submit" value="'.$ac_lang["delete"].'">
+					</div>
+				</form>
 				';
 			}
 			break;
@@ -183,9 +191,9 @@ if(isset($_REQUEST["action"])){
 		
 		$list_items.='
 		<tr '.$row_class.'>
-			<td>'.$row["id"].'</td>
+			<td class="small-screen-no">'.$row["id"].'</td>
 			<td class="center">'.$admin_levels[$row["level"]].'</td>
-			<td>'.$row["email"].'</td>
+			<td class="small-screen-no">'.$row["email"].'</td>
 			<td class="center">
 				';
 				if($row["id"]==1)	$list_items.='-';
@@ -197,8 +205,8 @@ if(isset($_REQUEST["action"])){
 					<li><a href="?p='.AC_PAGE.'&action=edit&id='.$row["id"].'" title="'.$ac_lang["edit"].'">'.icon("pencil").'</a></li>
 					<li>
 					';
-					if($row["id"]==1) 	$list_items.=icon("bin",'#EEE');
-					else 				$list_items.='<a href="?p='.AC_PAGE.'&action=delete&id='.$row["id"].'" title="'.$ac_lang["delete"].'">'.icon("bin").'';
+					if($row["id"]==1) 	$list_items.='<span>'.icon("bin",'#EEE').'</span>';
+					else 				$list_items.='<a href="?p='.AC_PAGE.'&action=delete&id='.$row["id"].'" title="'.$ac_lang["delete"].'">'.icon("bin").'</a>';
 					$list_items.='
 					</li>
 				</ul>
@@ -212,9 +220,9 @@ if(isset($_REQUEST["action"])){
 		<table>
 			<thead>
 				<tr>
-					<td class="id"><a href="?p='.AC_PAGE.'&o=id" 		title="'.$ac_lang["order_by"].' : '.$ac_lang["id"].'">'.$ac_lang["id"].'</a></td>
+					<td class="id small-screen-no"><a href="?p='.AC_PAGE.'&o=id" 		title="'.$ac_lang["order_by"].' : '.$ac_lang["id"].'">'.$ac_lang["id"].'</a></td>
 					<td><a href="?p='.AC_PAGE.'&o=level"	title="'.$ac_lang["order_by"].' : '.$ac_lang["level"].'">'.$ac_lang["level"].'</a></td>
-					<td><a href="?p='.AC_PAGE.'&o=email" 	title="'.$ac_lang["order_by"].' : '.$ac_lang["email"].'">'.$ac_lang["email"].'</a></td>
+					<td class="small-screen-no"><a href="?p='.AC_PAGE.'&o=email" 	title="'.$ac_lang["order_by"].' : '.$ac_lang["email"].'">'.$ac_lang["email"].'</a></td>
 					<td>'.$ac_lang["state"].'</td>
 					<td><span class="small-screen-no">'.$ac_lang["options"].'</span></td>
 				</tr>
@@ -222,8 +230,10 @@ if(isset($_REQUEST["action"])){
 			<tbody>
 				'.$list_items.'
 			</tbody>
-			
 		</table>
+		<div class="block-buttons note">
+			'.$ac_lang["note_active_state"].'
+		</div>
 	</div>
 	';
 }

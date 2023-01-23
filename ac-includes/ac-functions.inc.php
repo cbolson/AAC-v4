@@ -4,7 +4,6 @@ Script		: Ajax availability calendar www.ajaxavailabilitycalendar.com
 Author		: Chris Bolson www.cbolson.com
 
 File		: functions.inc.php
-Date		: 2021-09-20
 Date mod	: 2023-01-04
 Use			: common functions for all pages
 */
@@ -12,7 +11,7 @@ Use			: common functions for all pages
 // set local time for newer php installations that require it (function at bottom of page)
 //date_default_timezone_set(getLocalTimezone());
 
-// util - readable array output
+// util - formatted array output
 if(!function_exists("print_arr")){
 	function print_arr($arr){
 		echo "<pre>";
@@ -200,8 +199,9 @@ if(!function_exists("drawCalJSON")){
 				$this_date_state	= $arr_dates_booked["state"];
 			}
 		
-			//TESTING
-			
+			// FOR TESTING
+			// this test forces several days to be marked as booked 
+
 			// if($start_month==date("m", strtotime('+2 months'))){
 			// 	//if($this_day_counter==12){
 			// 	if( ($this_day_counter >11) && ($this_day_counter <14)){
@@ -216,9 +216,6 @@ if(!function_exists("drawCalJSON")){
 			// 		$this_day_classes.='booked-pm,';
 			// 	}
 			// }
-			
-			
-			
 			
 			// return date classes as array
 			if(!empty($this_day_classes)){
@@ -395,7 +392,6 @@ if(!function_exists("htmlEmail")){
 		}
 	}
 }
-
 // get single text translations - mainly used for emails when comunicating with users
 if(!function_exists("getTextLocal")){
 	function getTextLocal($txt_code,$txt_lang,$txt_type="texts",$return_default=true){
@@ -595,7 +591,7 @@ if(!function_exists("fieldRow")){
 if(!function_exists("fieldRowData")){
 	function fieldRowData($label,$field){
 		$row='
-		<div class="field-row">
+		<div class="field-row field-row--data">
 			<label for="'.$field_id.'">'.$label.':</label>
 			<div class="field-data">'.$field.'</div>
 		</div>

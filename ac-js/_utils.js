@@ -1,12 +1,12 @@
 // add defined class to element
 export function createEl(elType, className = "") {
   const el = document.createElement(elType);
-  if (className) el.classList.add(`${className}`);
+  if (className) addClass(el, className);
   return el;
 }
 // add defined class to element
 export function addClass(el, className) {
-  return el.classList.add(`${className}`);
+  return el.classList.add(className);
 }
 
 // Debounce - prevent calling the resize window function on every slightest move.

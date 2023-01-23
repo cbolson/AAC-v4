@@ -13,7 +13,7 @@
 
   --header-bg: hsla(200, 50%, 35%);
   --header-txt: hsl(0, 0%, 100%);
-
+  --header-logo-w: 120px;
   --ac-color1-light: hsla(var(--base-color1), 50%, 85%, 100%);
   --ac-color1-normal: hsla(var(--base-color1), 50%, 50%, 100%);
   --ac-color1-darker: hsl(200, 50%, 35%);
@@ -28,11 +28,15 @@
   --ac-msg-bg-alert: #ffd9d9;
 
   --ac-border-radius: 0;
-  --ac-fields-radius: 8px;
+  --ac-fields-radius: 0.25rem;
 
   --nav-bg-hvr: var(--bg-body);
   --nav-txt-clr: hsl(0, 0%, 90%);
   --nav-txt-clr-hover: #000;
+
+  --section-padding: 1rem 1rem;
+  --main-width: 100%;
+  --options-gap: 0.5rem;
 
   --hamburger-clr: #fff;
   --hamburger-display: block;
@@ -59,7 +63,8 @@ a {
 }
 main {
   margin: 0 auto;
-  width: 100%;
+  width: var(--main-width);
+  max-width: var(--main-width);
 }
 
 .header,
@@ -76,21 +81,15 @@ div.msg {
   border-bottom: none;
   background: var(--header-bg);
   color: var(--header-txt);
-
   position: relative;
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: space-between;
 }
-/* .header__top {
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-} */
+
 .header__logo {
-  flex: 0 0 220px;
-  margin-right: auto;
+  width: var(--header-logo-w, 120px);
+  vertical-align: top;
 }
 .header__logo img {
   width: 100%;
@@ -103,7 +102,7 @@ main {
   padding: 0;
 }
 section {
-  padding: 1rem 3rem;
+  padding: var(--section-padding);
 }
 footer {
   background: #eee;
@@ -133,15 +132,6 @@ li.ok {
   color: green;
 }
 
-li.ok {
-  /* list-style-type: none; */
-}
-li.ok::before {
-  /* content: "✓";
-  color: green;
-  margin: 0 0.4rem 0 -1rem; */
-}
-
 /* login & password reset */
 .block--login {
   max-width: 480px;
@@ -154,7 +144,7 @@ nav {
   flex: 1;
 }
 .hamburger {
-  margin: 0.6em 0.5em 0 auto;
+  margin: 0 0 0 auto;
   display: var(--hamburger-display);
   fill: var(--hamburger-clr);
   cursor: pointer;
@@ -393,27 +383,32 @@ input.slider::-moz-range-thumb {
   background: var(--ac-color1-darker);
   color: #fff;
 }
-div.field-row {
-  margin-bottom: 1rem;
+.field-row {
+  margin-bottom: 0.5rem;
 }
-div.field-row input:not([type="submit"]) {
+.field-row input:not([type="submit"]) {
   width: 100%;
 }
 
-div.field-row label {
+.field-row label {
   display: block;
   margin-bottom: 0.25rem;
   font-size: 0.9rem;
 }
-div.field-row input[type="submit"] {
+.field-row input[type="submit"] {
   width: auto;
 }
-div.field-row .field-data {
-  /* padding: 14px 10px;
+.field-row--data {
+  padding: 14px 10px;
   border-bottom: 1px dashed #ddd;
-  width: 100%; */
+  width: 100%;
+  display: flex;
 } /* try to have same spacing as form fields */
-div.field-row .note {
+.field-row--data label {
+  width: 200px;
+}
+
+.note {
   display: block;
   color: green;
   font-style: italic;
@@ -473,13 +468,11 @@ span.pseudo-button {
 /* blocks */
 .block {
   color: #2d567c;
-  /* padding: 20px 30px; */
 }
 .block-title {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* border-bottom: 1px solid var(--ac-border-color); */
   padding: var(--ac-padding);
 }
 .block-title h1 {
@@ -498,10 +491,13 @@ span.pseudo-button {
   color: green;
   text-decoration: none;
 }
-.block-footer {
-  margin-top: 20px;
+.block-buttons {
+  margin-top: 2rem;
   border-top: 1px solid var(--ac-border-color);
-  padding: 10px 0 0;
+  padding: 1rem 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .block-msg {
   padding: 0.5rem 1rem;
@@ -541,7 +537,6 @@ td.options {
 td.handles,
 td.id,
 td.state {
-  width: 10px;
   text-align: center;
 }
 td.col-lang-translated {
@@ -555,14 +550,12 @@ td.center {
 }
 td.options ul {
   list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--options-gap, 0.5rem);
 }
-td.options ul li {
-  display: inline-block;
-  margin-right: 10px;
-}
-td.options ul li:last-of-type {
-  margin-right: 0;
-}
+
 tr.item-added td,
 tr.item-modified td {
   font-weight: bold;
@@ -676,34 +669,13 @@ http://huebee.buzz
 .settings-sticky {
   position: sticky;
   position: -webkit-sticky;
-  top: 60px;
+  top: 80px;
 }
 @media all and (min-width: 480px) {
   :root {
     --ac-border-radius: 6px;
-  }
-
-  main {
-    max-width: 1000px;
-  }
-
-  div.field-row {
-    /* display: flex; */
-  }
-  div.field-row label {
-    /* flex: 0 0 240px;
-    line-height: 2.3em; */
-  }
-  div.field-row label {
-    /* padding: 0 10px;
-    margin-right: 5px;
-    background: var(--ac-color1-light);
-    border-radius: var(--ac-fields-radius); */
-  }
-
-  div.field-row input[type="submit"] {
-    /* margin-left: 245px;
-    width: auto; */
+    --section-padding: 1rem 2rem;
+    --header-logo-w: 160px;
   }
   .icon {
     width: 1.2em;
@@ -717,9 +689,6 @@ http://huebee.buzz
   .block-cols {
     flex-direction: row;
   }
-  .small-screen-no {
-    display: block;
-  }
   td.options {
     width: 140px;
   }
@@ -728,6 +697,16 @@ http://huebee.buzz
 @media (min-width: 800px) {
   :root {
     --hamburger-display: none;
+    --section-padding: 1rem 3rem;
+    --main-width: 1000px;
+    --options-gap: 1rem;
+    --header-logo-w: 200px;
+  }
+  .small-screen-no {
+    display: block;
+  }
+  td.small-screen-no {
+    display: table-cell;
   }
   .header {
     position: sticky;
@@ -739,10 +718,10 @@ http://huebee.buzz
     color: var(--bg-body);
   }
   nav {
-    margin-left: auto;
+    margin: 1rem 0 0 auto;
   }
   .menu {
-    margin: 20px 0 0 auto;
+    margin: 0 0 0 auto;
     padding: 0;
     height: auto;
     align-items: center;
@@ -766,5 +745,27 @@ http://huebee.buzz
   .menu a:hover::after,
   .menu a:focus::after {
     display: none;
+  }
+  .field-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .field-row label {
+    max-width: 200px;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    min-height: 3em;
+    padding: 0 10px;
+    background: var(--ac-color1-light);
+    border-radius: var(--ac-fields-radius);
+  }
+  .field-row input[type="submit"] {
+    margin-left: 245px;
+    width: auto;
+  }
+  .settings-colors {
+    display: block;
   }
 }

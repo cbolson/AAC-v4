@@ -47,7 +47,15 @@ if(count($arr_user_items)==0){
 					<input type="hidden" name="p" value="'.AC_PAGE.'">
 					'.fieldRow($ac_lang["item_to_show"],'id_item','<select name="id_item" onchange="this.form.submit();">'.$list_items.'</select>').'
 				</form>
-				<div id="demo-calendar" style=""></div>
+				<ac-calendar
+						id="my-cal"
+						ac-id="2"
+						ac-lang="en"
+						ac-date-start="date-start"
+						ac-date-end="date-end"
+						ac-months-to-show="0"
+						>
+					</ac-calendar>
 			</div>
 			<div id="block-booking" style="margin-top:10px;">
 				<h2>_Reserve dates_</h2>
@@ -72,9 +80,8 @@ if(count($arr_user_items)==0){
 	}	
 	if(!empty($id_item)){
 		$xtra_js_files='
-		<script src="'.AC_URL.'ac-assets/ac-calendar.js?v=4.51" id="ac-cal" type="module" ac-container="demo-calendar" ac-item="'.$id_item.'" ac-dateStart="date-start" ac-dateEnd="date-end"></script>
+		<script src="'.AC_URL.'ac-js/ac-calendar-v2.js?v=4.51" id="ac-cal" type="module" ac-container="demo-calendar" ac-item="'.$id_item.'" ac-dateStart="date-start" ac-dateEnd="date-end"></script>
 		
         ';	
 	}
 }
-?>

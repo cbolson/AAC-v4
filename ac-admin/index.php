@@ -153,17 +153,15 @@ echo '
 	<body>
 		 <main>
 			<header class="header">
-				
-					<div class="header__logo"><img src="'.AC_LOGO.'" title="Availability Calendar - Admin" width="300"></div>
-					'.$block_nav.'
-			
+				<div class="header__logo"><img src="'.AC_LOGO.'" title="Availability Calendar - Admin" width="300"></div>
+				'.$block_nav.'
 			</header>
 			'.$block_msg.'
 			'.$block_contents.'
 			'.$block_footer.'
 		</main>
 		<script defer src="assets/svgxuse.min.js"></script>
-		<script defer src="assets/ac-functions.js?'.time().'"></script>
+		<script defer src="assets/admin.js?'.time().'"></script>
 		'.$xtra_js_files.'
 		'.$block_xtra_js.'
 	</body>
