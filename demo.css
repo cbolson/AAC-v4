@@ -1,0 +1,153 @@
+* {
+  /* reset */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0px;
+  outline: 0px;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: sans-serif;
+  vertical-align: baseline;
+}
+:root {
+  /* base color 1 */
+  --base-color1: 200; /* blue */
+
+  --ac-color1-light: hsla(var(--base-color1), 50%, 85%, 100%);
+  --ac-color1-normal: hsla(var(--base-color1), 50%, 50%, 100%);
+  --ac-color1-darker: hsla(var(--base-color1), 50%, 35%, 100%);
+
+  --ac-link: var(--ac-color1-normal);
+  --ac-border-color: #ddd;
+  --ac-fields-border: #ccc;
+  --ac-fields-bg-hover: #f7f6f4;
+
+  --ac-msg-bg-ok: #f4faf4;
+  --ac-msg-bg-alert: #ffd9d9;
+
+  --ac-border-radius: 8px;
+  --ac-fields-radius: 3px;
+  --ac-padding: 10px 30px;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6em;
+  font-size: 16px;
+}
+a {
+  color: var(--ac-color1-normal);
+}
+h1 {
+  font-weight: 600;
+  font-size: 1.3em;
+  color: var(--ac-color1-darker);
+}
+h2 {
+  font-weight: 500;
+  font-size: 1.2em;
+  margin: 3rem 0 1rem 0;
+  color: var(--ac-color1-darker);
+}
+strong {
+  font-weight: 600;
+}
+ol,
+ul.checklist {
+  margin: 10px 20px;
+  padding: 0 0 0 10px;
+}
+ul.checklist {
+  list-style: none;
+}
+
+ul.checklist li:before {
+  content: "✓";
+  margin-right: 10px;
+  color: green;
+  font-size: 1.2em;
+}
+ul.checklist li {
+}
+
+#container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 1400px;
+}
+header {
+  background: var(--ac-color1-darker);
+  border: none;
+  border-radius: var(--ac-border-radius);
+  position: relative;
+  display: flex;
+  padding: var(--ac-padding);
+  color: #fff;
+  font-size: 1.2em;
+  line-height: 2em;
+  margin-bottom: 10px;
+}
+main {
+  margin-top: 0;
+  padding: 0 0 20px 0px;
+  flex: 1;
+}
+.header__logo {
+  flex: 0 0 220px;
+  width: 190px;
+}
+.header__logo img {
+  width: 100%;
+}
+.header__title {
+  margin-left: auto;
+  padding-top: 10px;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+footer {
+  font-size: 0.9em;
+  line-height: 1.1em;
+  margin: 0;
+  overflow: hidden;
+  background: #ddd;
+  position: relative;
+  padding: 20px;
+  text-align: center;
+  border-radius: var(--ac-border-radius);
+}
+footer ul {
+  list-style: none;
+}
+footer ul li {
+  display: inline;
+  margin: 0 10px;
+}
+pre {
+  border-radius: var(--ac-border-radius);
+  tab-size: 4;
+  white-space: pre-wrap;
+  border: 1px solid #ddd;
+  padding: 2rem 3rem 0 0;
+  background: #faffe0;
+}
+.block-booking {
+  max-width: 600px;
+  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+input,
+button {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 1.4em;
+}
