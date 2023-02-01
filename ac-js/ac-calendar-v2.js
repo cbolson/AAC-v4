@@ -56,8 +56,8 @@ let curTime = d.getTime();
 
 // create common elements once then CLONE in loops (not 100% convinced that this method saves time)
 const newMonthEl = createEl("div", "ac-month");
-const monthTitleEl = createEl("h2");
-const weekDayTitlesEl = createEl("ul", "ac-day-title");
+const monthTitleEl = createEl("div", "ac-month-title");
+const weekDayTitlesEl = createEl("ul", "ac-weekdays");
 const weekDaysNumbersEl = createEl("ul", "ac-days");
 const weekDayEl = createEl("li");
 const acSpinner =

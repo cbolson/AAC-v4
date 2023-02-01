@@ -1,4 +1,4 @@
-#ac-container * {
+* {
   /* reset calendar child elements without affecting external elements */
   box-sizing: border-box;
   margin: 0;
@@ -10,26 +10,41 @@
   font-size: 100%;
   font-family: sans-serif;
   vertical-align: baseline;
-
   /* define colors here */
   /* NOTE - main colors are defined via admin panel*/
+}
 
-  /* fine tune text and background colors etc here */
-  --ac-numbers-empty-txt: #ccc;
-  --ac-numbers-empty-bg: var(
-    --ac-numbers-bg
-  ); /* days from previous or next month - same color background as active month */
-  --ac-weekend-bg: var(
-    --ac-numbers-bg
-  ); /* change this if you want the weekend days to have a different backgroud color */
-  --ac-weekend-txt: var(
-    --ac-numbers-txt
-  ); /* change this if you want the weekend days to have a different text color */
+:host {
+  /* general spacing and text sizes - NOT defined in admin settings */
+  --text-size: 1rem;
+  --text-size-today: 1.2rem;
+  --day-gap: 1px;
+  --month-gap: 1rem;
 
-  /* general spacing and text sizes */
-  --ac-txt-size: 16px; /* date font size*/
-  --ac-txt-size-today: 24px; /* todays date font size*/
-  --ac-grid-gap: 1px; /* spacing between dates */
+  /* 
+  NEW CUSTOM PROPERTIES FROM SETTINGS -
+  NEED TO UPDATE DB AND SETTINGS WITH THESE NEW DEFINITIONS 
+   */
+  --ac-month-title-clr: #fff;
+  --ac-month-title-bg: #046889;
+  --ac-weekday-bg: #8fd9f2;
+  --ac-weekday-clr: #000;
+
+  --ac-day-bg: #f0f0f0;
+  --ac-day-clr: #000;
+  --ac-day-clr-hover: orange;
+  --ac-weekend-bg: #f0f0f0;
+  --ac-weekend-clr: #000;
+
+  --ac-nav-clr: #046889;
+  --ac-nav-clr-hover: #000;
+
+  --ac-booked-clr: #000;
+  --ac-booked-bg: #ff9090;
+
+  --ac-select-start: #ffcc00;
+  --ac-select-end: #ffcc00;
+  --ac-select-between: #fdeeb3;
 }
 
 .ac-alert {
@@ -42,203 +57,195 @@
   background-color: rgb(245, 245, 203);
   color: #333;
 }
-#ac-container {
-  margin-inline: auto;
-}
-#ac-container ul#ac-nav {
+
+/* calendar nav (back, today & next)*/
+ul#ac-nav {
   display: block;
   text-align: right;
   list-style: none;
   margin-bottom: 10px;
 }
-#ac-container ul#ac-nav li {
+ul#ac-nav li {
   display: inline-block;
   margin-right: 10px;
-  color: var(--ac-nav-txt);
+  color: var(--ac-nav-clr);
   position: relative;
   cursor: pointer;
 }
-#ac-container ul#ac-nav li:hover {
-  color: var(--ac-nav-txt-hover);
+ul#ac-nav li:hover {
+  color: var(--ac-nav-clr-hover);
 }
-#ac-container ul#ac-nav li.loader {
+ul#ac-nav li.loader {
   text-align: center;
   min-width: 70px;
 }
-#ac-container #ac-nav li.arrows:hover {
-  border-color: var(--ac-color2-bg);
-}
-#ac-container #ac-months {
+
+/* month holder*/
+#ac-months {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  /*grid-template-columns: repeat(3, 1fr); */ /* number of columns */
-  column-gap: 1rem; /* space between columns */
-  row-gap: 1rem; /* space between rows */
-  margin: 0 auto;
+  gap: var(--month-gap);
+  grid-auto-rows: 1fr;
 }
-#ac-container .ac-month {
-  flex: 1 1 0px;
-  line-height: 30px;
+
+/* each individual month */
+.ac-month {
   overflow: hidden;
-  background-color: var(--ac-color1-bg);
-  border: solid 1px var(--ac-color1-bg);
   border-radius: var(--ac-border-radius);
 }
-#ac-container .ac-month h2 {
-  padding: 5px;
-  text-align: center;
-  color: var(--ac-color2-txt);
-  background-color: var(--ac-color2-bg);
+
+/* month title*/
+.ac-month-title {
+  padding: 0.5rem;
+  display: grid;
+  place-content: center;
+  color: var(--ac-month-title-clr);
+  background-color: var(--ac-month-title-bg);
 }
-#ac-container .ac-month ul {
+
+/* day elements - common styles*/
+.ac-month ul {
   list-style: none;
+  position: relative;
+  font-size: var(--text-size);
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  position: relative;
-  grid-column-gap: var(--ac-grid-gap);
-  grid-row-gap: var(--ac-grid-gap);
-  border-top: solid 1px var(--ac-color1-bg);
-  font-size: var(--ac-txt-size);
-}
-#ac-container .ac-month ul li {
-  text-align: center;
-  padding: 5px;
-  color: var(--ac-numbers-txt);
-}
-#ac-container .ac-month ul li:hover {
-  color: var(--ac-numbers-txt-hover);
-}
-/* month - title */
-#ac-container .ac-month ul.ac-day-title {
-  background: var(--ac-numbers-bg); /*adds lines between day titles*/
+  gap: var(--day-gap);
 }
 
-#ac-container .ac-month ul.ac-day-title li {
-  background-color: var(--ac-color1-bg);
-  color: var(--ac-color1-txt);
-  font-size: 0.8em;
+/* weekday titles and days */
+.ac-weekdays li,
+.ac-days li {
+  display: grid;
+  place-items: center;
+  padding: 0.5rem;
 }
 
-/* month - days */
-#ac-container ul.ac-days li {
-  background: var(--ac-numbers-bg);
-  position: relative;
-  overflow: hidden;
+/* weekday titles */
+.ac-weekdays li {
+  color: var(--ac-weekday-clr);
+  background-color: var(--ac-weekday-bg);
 }
-#ac-container ul.ac-days li:not(.empty) {
+
+/* days */
+.ac-days li {
+  color: var(--ac-day-clr);
+  background-color: var(--ac-day-bg);
+}
+.ac-days li:hover {
+  color: var(--ac-day-clr-hover);
+}
+.ac-days li:not(.empty) {
   cursor: pointer;
 }
-#ac-container ul.ac-days li span {
-  position: relative;
-}
+
 /* day - weekend */
-#ac-container ul.ac-days li.weekend {
+ul.ac-days li.weekend {
+  color: var(--ac-weekend-clr);
   background-color: var(--ac-weekend-bg);
 }
 /* day - past or next month */
-#ac-container ul.ac-days li.empty {
-  color: var(--ac-numbers-empty-txt);
-  background: var(--ac-numbers-empty-bg);
+ul.ac-days li.empty {
+  opacity: 0.3;
 }
+
 /* day - past dates */
-#ac-container ul.ac-days li.past {
-  opacity: 0.8;
-  font-size: var(--ac-txt-size-past);
+ul.ac-days li.past {
+  opacity: 0.6;
 }
 /* day - today */
-#ac-container ul.ac-days li.today {
-  font-weight: 600;
-  font-size: var(--ac-txt-size-today);
+ul.ac-days li.today {
+  font-weight: 700;
 }
 /* day - booked */
-#ac-container ul.ac-days li.booked {
+ul.ac-days li.booked {
   cursor: not-allowed;
+  color: var(--ac-booked-clr);
   background-color: var(--ac-booked-bg);
-  color: var(--ac-booked-txt);
 }
 /* day - booked pm */
-#ac-container ul.ac-days li.booked-pm {
+ul.ac-days li.booked-pm {
   background-image: -webkit-linear-gradient(
     -45deg,
-    var(--ac-numbers-bg) 50%,
+    var(--ac-day-bg) 50%,
     var(--ac-booked-bg) 50%
   );
 }
 /* day - booked am */
-#ac-container ul.ac-days li.booked-am {
+ul.ac-days li.booked-am {
   background-image: -webkit-linear-gradient(
     135deg,
-    var(--ac-numbers-bg) 50%,
+    var(--ac-day-bg) 50%,
     var(--ac-booked-bg) 50%
   );
 }
-/* day - date range betwen */
-#ac-container ul.ac-days li.date-select-between {
+/* day - date range between */
+ul.ac-days li.date-select-between {
   background: var(--ac-select-between);
 }
 /* day - date range start, am available */
-#ac-container ul.ac-days li.date-select-start {
+li.date-select-start {
   background-image: -webkit-linear-gradient(
     -45deg,
-    var(--ac-numbers-bg) 50%,
-    var(--ac-select-range) 50%
+    var(--ac-day-bg) 50%,
+    var(--ac-select-start) 50%
   );
 }
 /* day - date range start pm, am booked */
-#ac-container ul.ac-days li.date-select-start-pm {
+li.date-select-start-pm {
   background-image: -webkit-linear-gradient(
     135deg,
-    var(--ac-select-range) 50%,
+    var(--ac-select-start) 50%,
     var(--ac-booked-bg) 50%
   );
 }
 /* day - date range end am, pm available*/
-#ac-container ul.ac-days li.date-select-end {
+ul.ac-days li.date-select-end {
   background-image: -webkit-linear-gradient(
     135deg,
-    var(--ac-numbers-bg) 50%,
-    var(--ac-select-range) 50%
+    var(--ac-day-bg) 50%,
+    var(--ac-select-end) 50%
   );
 }
 /* day - date range end am, pm booked */
-#ac-container ul.ac-days li.date-select-end-am {
+ul.ac-days li.date-select-end-am {
   background-image: -webkit-linear-gradient(
     135deg,
     var(--ac-booked-bg) 50%,
-    var(--ac-select-range) 50%
+    var(--ac-select-end) 50%
   );
 }
 
 /* css only ac-spinner */
-#ac-container .ac-spinner {
+.ac-spinner {
   display: inline-block;
   position: relative;
   width: 70px;
   height: 10px;
 }
-#ac-container .ac-spinner div {
+.ac-spinner div {
   position: absolute;
   top: 0;
   left: 0;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: var(--ac-numbers-txt);
+  background-color: var(--ac-nav-clr);
   animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
-#ac-container .ac-spinner div:nth-child(1) {
+.ac-spinner div:nth-child(1) {
   left: 8px;
   animation: ac-spinner1 0.6s infinite;
 }
-#ac-container .ac-spinner div:nth-child(2) {
+.ac-spinner div:nth-child(2) {
   left: 8px;
   animation: ac-spinner2 0.6s infinite;
 }
-#ac-container .ac-spinner div:nth-child(3) {
+.ac-spinner div:nth-child(3) {
   left: 32px;
   animation: ac-spinner2 0.6s infinite;
 }
-#ac-container .ac-spinner div:nth-child(4) {
+.ac-spinner div:nth-child(4) {
   left: 56px;
   animation: ac-spinner3 0.6s infinite;
 }
