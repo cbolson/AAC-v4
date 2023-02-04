@@ -505,10 +505,10 @@ if(!function_exists("addItem")){
 if(!function_exists("modItem")){
 	function modItem($table,$id_item,$values,$debug=false){
 		global $db_cal;
-		$mod_data="";
+		$mod_data ='';
 		foreach($values AS $field=>$val){
-			if($field=="password" && $val!="") 	$mod_data.="`".$field."` = md5('".$val."'),";
-			else 								$mod_data.="`".$field."` = '".mysqli_real_escape_string($db_cal,$val)."',";
+			if($field=="password" && !empty($val)) 	$mod_data.="`".$field."` = md5('".$val."'),";
+			else 									$mod_data.="`".$field."` = '".mysqli_real_escape_string($db_cal,$val)."',";
 		}
 		$mod_data=substr($mod_data,0,-1);
 		$update="UPDATE `".$table."` SET ".$mod_data." WHERE id='".mysqli_real_escape_string($db_cal,$id_item)."' LIMIT 1";

@@ -29,22 +29,18 @@
   --ac-month-title-bg: #046889;
   --ac-weekday-bg: #8fd9f2;
   --ac-weekday-clr: #000;
-
   --ac-day-bg: #f0f0f0;
   --ac-day-clr: #000;
-  --ac-day-clr-hover: orange;
+  --ac-day-clr-hover: #ffa500;
   --ac-weekend-bg: #f0f0f0;
   --ac-weekend-clr: #000;
-
   --ac-nav-clr: #046889;
   --ac-nav-clr-hover: #000;
-
   --ac-booked-clr: #000;
   --ac-booked-bg: #ff9090;
-
-  --ac-select-start: #ffcc00;
-  --ac-select-end: #ffcc00;
+  --ac-select-range: #ffcc00;
   --ac-select-between: #fdeeb3;
+  --ac-border-radius: 4.5rem;
 }
 
 .ac-alert {
@@ -195,7 +191,7 @@ li.date-select-start {
 li.date-select-start-pm {
   background-image: -webkit-linear-gradient(
     135deg,
-    var(--ac-select-start) 50%,
+    var(--ac-select-range) 50%,
     var(--ac-booked-bg) 50%
   );
 }
@@ -204,7 +200,7 @@ ul.ac-days li.date-select-end {
   background-image: -webkit-linear-gradient(
     135deg,
     var(--ac-day-bg) 50%,
-    var(--ac-select-end) 50%
+    var(--ac-select-range) 50%
   );
 }
 /* day - date range end am, pm booked */
@@ -212,7 +208,7 @@ ul.ac-days li.date-select-end-am {
   background-image: -webkit-linear-gradient(
     135deg,
     var(--ac-booked-bg) 50%,
-    var(--ac-select-end) 50%
+    var(--ac-select-range) 50%
   );
 }
 

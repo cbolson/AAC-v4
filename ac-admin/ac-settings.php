@@ -32,6 +32,31 @@ echo serialize($arr);
 
 
 
+// $arr = [];
+// $arr["--ac-month-title-clr"] = "#FFFFFF";
+// $arr["--ac-month-title-bg"] = "#046889";
+// $arr["--ac-weekday-bg"] 	= "#8fd9f2";
+// $arr["--ac-weekday-clr"] 	= "#000000";
+// $arr["--ac-day-bg"] 		= "#f0f0f0";
+// $arr["--ac-day-clr"] 		= "#000000";
+// $arr["--ac-day-clr-hover"] 	= "#ffa500";
+// $arr["--ac-weekend-bg"] 	= "#f0f0f0";
+// $arr["--ac-weekend-clr"] 	= "#000000";
+// $arr["--ac-nav-clr"] 		= "#046889";
+// $arr["--ac-nav-clr-hover"] 	= "#000000";
+// $arr["--ac-booked-clr"] 	= "#000000";
+// $arr["--ac-booked-bg"] 		= "#ff9090";
+// $arr["--ac-select-range"] 	= "#ffcc00";
+// $arr["--ac-select-between"] = "#fdeeb3";
+// $arr["--ac-month-title-bg"] = "#046889";
+// $arr["--ac-border-radius"] = "2.5rem";
+// //echo serialize($arr);
+// $_POST["mod-styles"] = $arr;
+
+
+//exit();
+
+
 //	NOTE - $row_config is defined in the common file
 if(isset($_POST["mod"])){
 	/*
@@ -56,6 +81,7 @@ $row_settings='';
 // add each style
 foreach($styles AS $key=>$val){
 	$label=$ac_lang[str_replace("--ac-","style-",$key)];
+	if(empty($label)) $label = '<span style="color:red;">'.$key.'</span>';
 	if(substr($key,-7)=="-radius"){
 		$field_style='<input type="range" id="'.$key.'" name="mod-styles['.$key.']" value="'.$val.'" min="0" max="30" style="width:120px;" class="slider" oninput="rangeChange(this)" onchange="rangeChange(this)">';	
 	}else{
