@@ -164,18 +164,19 @@ ul.ac-days li.booked {
 }
 /* day - booked pm */
 ul.ac-days li.booked-pm {
-  background-image: -webkit-linear-gradient(
-    -45deg,
-    var(--ac-day-bg) 50%,
-    var(--ac-booked-bg) 50%
+  background-image: linear-gradient(
+    to top left,
+    var(--ac-booked-bg) 50%,
+    var(--ac-day-bg) 50%
   );
+  /*  */
 }
 /* day - booked am */
 ul.ac-days li.booked-am {
-  background-image: -webkit-linear-gradient(
-    135deg,
-    var(--ac-day-bg) 50%,
-    var(--ac-booked-bg) 50%
+  background-image: linear-gradient(
+    to bottom right,
+    var(--ac-booked-bg) 50%,
+    var(--ac-day-bg) 50%
   );
 }
 /* day - date range between */
@@ -186,7 +187,7 @@ ul.ac-days li.date-select-between {
 /* day - date range start pm, am booked */
 ul.ac-days li.date-select-start-pm {
   background-image: linear-gradient(
-    135deg,
+    to bottom right,
     var(--ac-day-bg) 50%,
     var(--ac-select-range) 50%
   );
@@ -194,7 +195,7 @@ ul.ac-days li.date-select-start-pm {
 /* day - date range start pm, am booked */
 ul.ac-days li.date-select-start-pm-booked {
   background-image: linear-gradient(
-    135deg,
+    to bottom right,
     var(--ac-booked-bg) 50%,
     var(--ac-select-range) 50%
   );
@@ -203,7 +204,7 @@ ul.ac-days li.date-select-start-pm-booked {
 /* day - date range end am, pm available*/
 ul.ac-days li.date-select-end-am {
   background-image: linear-gradient(
-    135deg,
+    to bottom right,
     var(--ac-select-range) 50%,
     var(--ac-day-bg) 50%
   );
@@ -211,7 +212,7 @@ ul.ac-days li.date-select-end-am {
 /* day - date range end am, pm booked */
 ul.ac-days li.date-select-end-am-booked {
   background-image: linear-gradient(
-    135deg,
+    to bottom right,
     var(--ac-select-range) 50%,
     var(--ac-booked-bg) 50%
   );
