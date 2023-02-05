@@ -575,7 +575,7 @@ if(!function_exists("icon")){
 		return '<svg class="icon icon-'.$icon.$icon_class_size.'"'.$icon_style.'><use xlink:href="assets/symbol-defs.svg#icon-'.$icon.'"></use></svg>';
 	}
 }
-// return form field row with label
+// utility function - return form field row with label
 if(!function_exists("fieldRow")){
 	function fieldRow($label,$field_id,$field,$field_class=''){
 		$row='
@@ -587,7 +587,7 @@ if(!function_exists("fieldRow")){
 		return $row;
 	}
 }
-// return table row with label and data
+// utility function - return form row with label and data
 if(!function_exists("fieldRowData")){
 	function fieldRowData($label,$field){
 		$row='
@@ -599,7 +599,7 @@ if(!function_exists("fieldRowData")){
 		return $row;
 	}
 }
-// return form button
+// utility function - return form button
 if(!function_exists("fieldRowButton")){
 	function fieldRowButton($bt){
 		$row='
@@ -610,7 +610,7 @@ if(!function_exists("fieldRowButton")){
 		return $row;
 	}
 }
-// return warning message
+// utility function - return warning message
 if(!function_exists("blockMsg")){
 	function blockMsg($msg,$msg_class){
 		$data='
@@ -621,4 +621,14 @@ if(!function_exists("blockMsg")){
 		return $data;
 	}
 }
+// utility function - define contrasting color for text inputs
+if(!function_exists("getContrastColor")){
+	function getContrastColor($hexcolor) {               
+		$r = hexdec(substr($hexcolor, 1, 2));
+		$g = hexdec(substr($hexcolor, 3, 2));
+		$b = hexdec(substr($hexcolor, 5, 2));
+		$yiq = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+		return ($yiq >= 128) ? 'black' : 'white';
+	}
+} 
 ?>

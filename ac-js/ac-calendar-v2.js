@@ -342,10 +342,11 @@ function clearRangeStyles(removeStartDate = true) {
     // remove all (reset)
     clickableDates.forEach((d) => {
       d.classList.remove(
-        "date-select-start",
+        "date-select-start-pm",
+        "date-select-start-pm-booked",
         "date-select-between",
-        "date-select-end",
-        "date-select-end-am"
+        "date-select-end-am",
+        "date-select-end-am-booked"
       );
     });
   } else {
@@ -353,8 +354,8 @@ function clearRangeStyles(removeStartDate = true) {
     clickableDates.forEach((d) => {
       d.classList.remove(
         "date-select-between",
-        "date-select-end",
-        "date-select-end-am"
+        "date-select-end-am",
+        "date-select-end-am-booked"
       );
     });
   }
@@ -388,10 +389,9 @@ function setDate() {
     dateStartSet = true;
 
     // add start date class to this date
-
     this.classList.contains("booked-am")
-      ? addClass(this, "date-select-start-pm")
-      : addClass(this, "date-select-start");
+      ? addClass(this, "date-select-start-pm-booked")
+      : addClass(this, "date-select-start-pm");
   } else {
     // setting end date - need to check and highlight dates between
     let dateMove = new Date(startDate);
@@ -427,8 +427,8 @@ function setDate() {
 
       // add selected class
       this.classList.contains("booked-pm")
-        ? addClass(this, "date-select-end-am")
-        : addClass(this, "date-select-end");
+        ? addClass(this, "date-select-end-am-booked")
+        : addClass(this, "date-select-end-am");
 
       // reset click to make next date start date again
       dateStartSet = false;
