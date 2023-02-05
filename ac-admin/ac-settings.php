@@ -118,7 +118,7 @@ let urlRoot="'.AC_URL.'";
 </script>
 ';
 		$xtra_js_files='
-		<script src="'.AC_URL.'ac-js/ac-calendar-v2.js?v=4.51" type="module"></script>
+		<script src="'.AC_URL.'ac-js/ac-calendar.js" type="module"></script>
 		<script src="assets/huebee.pkgd.min.js" defer></script>
 		<script src="assets/admin-cal-settings.js" defer></script>
 		';

@@ -80,7 +80,7 @@ if(count($arr_user_items)==0){
 	}	
 	if(!empty($id_item)){
 		$xtra_js_files='
-		<script src="'.AC_URL.'ac-js/ac-calendar-v2.js?v=4.51" id="ac-cal" type="module" ac-container="demo-calendar" ac-item="'.$id_item.'" ac-dateStart="date-start" ac-dateEnd="date-end"></script>
+		<script src="'.AC_URL.'ac-js/ac-calendar.js" id="ac-cal" type="module" ac-container="demo-calendar" ac-item="'.$id_item.'" ac-dateStart="date-start" ac-dateEnd="date-end"></script>
 		
         ';	
 	}

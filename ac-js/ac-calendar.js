@@ -397,7 +397,7 @@ function setDate() {
     let dateMove = new Date(startDate);
     let dateEnd = new Date(dateSelected);
     let strDate = startDate;
-    const numNights = datediff(dateMove, dateEnd); // calculte number of nights (only used if min nights > 0 )
+    const numNights = datediff(dateMove, dateEnd); // calculate number of nights (only used if min nights > 0 )
 
     if (dateSelected < startDate) {
       alert(txtDateEndKO);
