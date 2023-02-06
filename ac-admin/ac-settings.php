@@ -117,7 +117,8 @@ $contents.='
 let urlRoot="'.AC_URL.'";
 </script>
 ';
-		$xtra_js_files='
+		$xtra_css_files.='<link rel="stylesheet" href="/ac-admin/assets/hubee.css">';
+		$xtra_js_files.='
 		<script src="'.AC_URL.'ac-js/ac-calendar.js" type="module"></script>
 		<script src="assets/huebee.pkgd.min.js" defer></script>
 		<script src="assets/admin-cal-settings.js" defer></script>

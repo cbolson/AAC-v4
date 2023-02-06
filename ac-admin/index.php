@@ -18,8 +18,9 @@ $msg_type			= '';
 $page_buttons		= '';
 $list_items			= '';
 $sql_cond_user		= '';
+$xtra_css_files		= '';
+$xtra_js_files  	= '';
 $admin_page_permit	= true;
-
 $inc_languages		= true;
 $inc_functions		= true;
 $inc_translations	= true;
@@ -33,7 +34,6 @@ else		require_once($the_file);
 $the_file=AC_INCLUDES_ROOT."ac-common.inc.php";
 if(!file_exists($the_file)) die("<b>".$the_file."</b> not found");
 else		require_once($the_file);
-
 
 // define page warning message if sent via url (eg after item edit)
 if(isset($_REQUEST["msg"])){
@@ -149,7 +149,8 @@ echo '
 		<meta name="viewport" content="user-scalable=yes, width=device-width">
 		<title>Admin : '.$page_title.' | Ajax Availability Calendar</title>
 		<link rel="stylesheet" href="/ac-admin/assets/admin.css?v='.time().'">
-	</head>
+		'.$xtra_css_files.'
+		</head>
 	<body>
 		 <main>
 			<header class="header">

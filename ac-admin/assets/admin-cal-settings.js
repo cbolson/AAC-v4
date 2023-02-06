@@ -145,7 +145,7 @@ function resetStyles() {
   });
 }
 function changeStyle(type, val) {
-  console.log(type);
+  //console.log(type);
   // get data for this field
   const elData = styleData.find((el) => el.name === `${type}`);
 
