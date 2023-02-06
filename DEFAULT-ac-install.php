@@ -442,7 +442,7 @@ function create_tables(){
 		`click_past_dates`	= 'off',
 		`cal_url`			= '/calendar',
 		`version`			= '".CAL_VERSION."',
-		`styles` 			= 'a:14:{s:14:\"--ac-color1-bg\";s:7:\"#8fd9f2\";s:15:\"--ac-color1-txt\";s:7:\"#046889\";s:14:\"--ac-color2-bg\";s:7:\"#046889\";s:15:\"--ac-color2-txt\";s:7:\"#FFFFFF\";s:15:\"--ac-numbers-bg\";s:7:\"#FFFFFF\";s:16:\"--ac-numbers-txt\";s:7:\"#046889\";s:22:\"--ac-numbers-txt-hover\";s:7:\"#000000\";s:14:\"--ac-booked-bg\";s:7:\"#ff9090\";s:15:\"--ac-booked-txt\";s:7:\"#333333\";s:17:\"--ac-select-range\";s:7:\"#FFCC00\";s:19:\"--ac-select-between\";s:7:\"#fdeeb3\";s:12:\"--ac-nav-txt\";s:7:\"#046889\";s:18:\"--ac-nav-txt-hover\";s:7:\"#000000\";s:18:\"--ac-border-radius\";s:2:\"12\";}',
+		`styles` 			= 'a:17:{s:13:\"--ac-month-bg\";s:7:\"#FFFFFF\";s:19:\"--ac-month-title-bg\";s:7:\"#046889\";s:20:\"--ac-month-title-clr\";s:7:\"#FFFFFF\";s:15:\"--ac-weekday-bg\";s:7:\"#8fd9f2\";s:16:\"--ac-weekday-clr\";s:7:\"#000000\";s:11:\"--ac-day-bg\";s:7:\"#f0f0f0\";s:12:\"--ac-day-clr\";s:7:\"#000000\";s:18:\"--ac-day-clr-hover\";s:7:\"#ffa500\";s:15:\"--ac-weekend-bg\";s:7:\"#f0f0f0\";s:16:\"--ac-weekend-clr\";s:7:\"#000000\";s:12:\"--ac-nav-clr\";s:7:\"#046889\";s:18:\"--ac-nav-clr-hover\";s:7:\"#000000\";s:14:\"--ac-booked-bg\";s:7:\"#ff9090\";s:15:\"--ac-booked-clr\";s:7:\"#000000\";s:17:\"--ac-select-range\";s:7:\"#ffcc00\";s:19:\"--ac-select-between\";s:7:\"#fdeeb3\";s:18:\"--ac-border-radius\";s:2:\"10\";}',
 		`min_nights`		= 2
 		
 	";
