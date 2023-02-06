@@ -242,7 +242,9 @@ div.msg.OK {
   background: var(--ac-msg-bg-ok);
   border-color: #88f088;
 }
-
+.hidden {
+  display: none;
+}
 /* form fields */
 input:not(.buttons),
 input[type="date"],
@@ -382,6 +384,12 @@ input.slider::-moz-range-thumb {
 .button {
   background: var(--ac-color1-darker);
   color: #fff;
+}
+.button--small {
+  font-size: 0.8rem;
+}
+.button--green {
+  background-color: green;
 }
 .field-row {
   margin-bottom: 0.5rem;

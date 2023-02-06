@@ -1,9 +1,14 @@
 <?php
+if(isset($_POST["add"])){
+	print_arr($_POST);
+	exit();
 
+
+}
 // create array of curent user items
 $arr_user_items=[];
 
-// create array of user item ids to verify that they have permision and to show default calendar
+// create array of user item ids to verify that they have permission and to show default calendar
 $sql="
 SELECT 
 	t.id
@@ -41,6 +46,7 @@ if(count($arr_user_items)==0){
 		$msg_type	= 'alert';
 	}else{
 		$contents.='
+		<form method="POST">
 		<div class="block">
 			<div class="block-inner">
 				<form>
@@ -60,18 +66,23 @@ if(count($arr_user_items)==0){
 			<div id="block-booking" style="margin-top:10px;">
 				<h2>_Reserve dates_</h2>
 				'.fieldRow($ac_lang["dates"] 	, ''		, '<input type="date" 	id="date-start" name="add[date-start]" value="" style="max-width:200px;" readonly="readonly"><input type="date" id="date-end" name="add[date-end]"  value=""style="max-width:200px;" readonly="readonly">').'
-				'.fieldRow($ac_lang["name"] 	, 'name'	, '<input type="text" 	id="name"	name="add[name]"">').'
-				'.fieldRow($ac_lang["email"] 	, 'email'	, '<input type="email" 	id="email"	name="add[email]"">').'
-				'.fieldRow($ac_lang["tel"] 		, 'tel'		, '<input type="text" 	id="tel"	name="add[tel]"">').'
-				'.fieldRow($ac_lang["comments"] , 'tel'		, '<textarea 			id="comments"	name="add[comments]"" style="width:100%; height:90px;"></textarea>').'
-				'.fieldRowButton('<input type="submit" value="'.$ac_lang["save"].'" disabled="disabled" />').'			
+				'.fieldRowButton('<button type="button" class="button button--small button--green" toggle-id="block-full-booking">_show_booking_details</button>').'
+				<div id="block-full-booking" class="hidden">
+					'.fieldRow($ac_lang["name"] 	, 'name'	, '<input type="text" 	id="name"	name="add[name]"">').'
+					'.fieldRow($ac_lang["email"] 	, 'email'	, '<input type="email" 	id="email"	name="add[email]"">').'
+					'.fieldRow($ac_lang["tel"] 		, 'tel'		, '<input type="text" 	id="tel"	name="add[tel]"">').'
+					'.fieldRow($ac_lang["comments"] , 'tel'		, '<textarea 			id="comments"	name="add[comments]"" style="width:100%; height:90px;"></textarea>').'
+				</div>
+			</div>
+			<div class="block-buttons">
+				<input type="submit" value="'.$ac_lang["save"].'" />
 			</div>
 		</div>
+		</form>
 		
-		
-		
-		
-		
+		';
+
+		$block_xtra_js='
 		<script>
 		// define path for ajax files BEFORE including the calendar JavaScript file
 		let urlRoot="'.AC_URL.'";
@@ -81,7 +92,6 @@ if(count($arr_user_items)==0){
 	if(!empty($id_item)){
 		$xtra_js_files='
 		<script src="'.AC_URL.'ac-js/ac-calendar.js" id="ac-cal" type="module" ac-container="demo-calendar" ac-item="'.$id_item.'" ac-dateStart="date-start" ac-dateEnd="date-end"></script>
-		
-        ';	
+		';	
 	}
 }

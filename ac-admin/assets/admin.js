@@ -64,4 +64,22 @@ document.addEventListener("DOMContentLoaded", function () {
   function toggleMenu(state) {
     hamburger.setAttribute("aria-expanded", `${state}`);
   }
+
+  const toggleBtns = document.querySelectorAll("[toggle-id]");
+  toggleBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idToggle = btn.getAttribute("toggle-id");
+      const elToggle = document.querySelector(`#${idToggle}`);
+      elToggle.classList.toggle("hidden");
+
+      fields = elToggle.querySelectorAll("input");
+      if (elToggle.classList.contains("hidden")) {
+        // need to disable form fields to prevent them from being submitted
+        fields.forEach((field) => field.setAttribute("disabled", true));
+      } else {
+        // remove "disabled"
+        fields.forEach((field) => field.removeAttribute("disabled"));
+      }
+    });
+  });
 });
