@@ -3,9 +3,9 @@
 Script		: Ajax availability calendar www.ajaxavailabilitycalendar.com
 Author		: Chris Bolson www.cbolson.com
 
-file		: 	ac-db-connect.inc.php
-use			: 	connect to database using variables defined in "config.inc.php"
-instructions:	No need to modify this file other than to adjust error messages
+file		: ac-db-connect.inc.php
+use			: connect to database using variables defined in "config.inc.php"
+			No need to modify this file other than to adjust error messages
 */
 $error=false;
 
@@ -96,7 +96,7 @@ if($dir_root!="/ac-install.php"){
 	else		require_once($the_file);
 }
 // connect to database - no need to adjust
-if(!$db_cal = @mysqli_connect(AC_DB_HOST,AC_DB_USER,AC_DB_PASS,AC_DB_NAME)){
+if(!$db_cal = mysqli_connect(AC_DB_HOST,AC_DB_USER,AC_DB_PASS,AC_DB_NAME)){
 	returnError('1.01','ERROR CONNECTING TO THE DATABASE');
 }elseif(!mysqli_select_db($db_cal,AC_DB_NAME)){
 	returnError('1.02','ERROR SELECTING THE DATABASE TABLE');	

@@ -31,8 +31,8 @@ if(mysqli_num_rows($res)==0){
 }else{
 	while($row=mysqli_fetch_assoc($res)){
 		if(!empty($row["local_txt"]))			$txt = $row["local_txt"];		# show local lang
-		else if(!empty($row["default_txt"]))	$txt = '_'.$row["default_txt"]; # show english
-		else 									$txt = '['.$row["code"].']'; 	# show code
+		//else if(!empty($row["default_txt"]))	$txt = '_'.$row["default_txt"]; # show english
+		else 									$txt = '{'.$row["code"].'}'; 	# show code
 		$ac_lang[$row["code"]]=nl2br($txt);
 	}
 }

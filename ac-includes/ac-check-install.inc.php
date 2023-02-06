@@ -4,7 +4,6 @@ Script		: Ajax availability calendar www.ajaxavailabilitycalendar.com
 Author		: Chris Bolson www.cbolson.com
 
 File		: ac-check-install.inc.php
-Date add	: 2021-09-27 (added in version 3.0.06)
 Date mod 	: 2023-01-01
 Use			: Check that ac-install.php file has been deleted for security.
 */
@@ -23,7 +22,6 @@ if(file_exists($the_file)){
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<title>Ajax Availability Calendar - Install</title>
 			 <link rel="stylesheet" href="/ac-admin/assets/admin.css?v3" />
-
 		</head>
 		<body>
 		<main>

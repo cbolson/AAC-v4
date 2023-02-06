@@ -8,9 +8,6 @@ Date mod	: 2023-01-04
 Use			: common functions for all pages
 */
 
-// set local time for newer php installations that require it (function at bottom of page)
-//date_default_timezone_set(getLocalTimezone());
-
 // util - formatted array output
 if(!function_exists("print_arr")){
 	function print_arr($arr){
@@ -42,7 +39,6 @@ if(!function_exists("getDateDayNumber")){
 if(!function_exists("getTotalMonthDays")){
 	function getTotalMonthDays($month,$year){
 		return cal_days_in_month(CAL_GREGORIAN, $month, $year);
-		//return date("t", strtotime($date_db));
 	}
 }
 
@@ -52,8 +48,7 @@ if(!function_exists("getBookings")){
 		$id_item,
 		$start_month,
 		$start_year,
-		$num_months=1,
-		$tmp_lang=AC_DEFAULT_LANG
+		$num_months=1
 	){
 		global $db_cal;
 		
@@ -202,20 +197,20 @@ if(!function_exists("drawCalJSON")){
 			// FOR TESTING
 			// this test forces several days to be marked as booked 
 
-			if($start_month==date("m", strtotime('+2 months'))){
-				//if($this_day_counter==12){
-				if( ($this_day_counter >11) && ($this_day_counter <14)){
-					$this_day_classes.='booked,';
-					$this_date_state='BOOKED';
-				}
-				if($this_day_counter==14){
-					$this_day_classes.='booked-am,';
-					$this_date_state='BOOKED pm';
-				}
-				if($this_day_counter==11){
-					$this_day_classes.='booked-pm,';
-				}
-			}
+			// if($start_month==date("m", strtotime('+2 months'))){
+			// 	//if($this_day_counter==12){
+			// 	if( ($this_day_counter >11) && ($this_day_counter <14)){
+			// 		$this_day_classes.='booked,';
+			// 		$this_date_state='BOOKED';
+			// 	}
+			// 	if($this_day_counter==14){
+			// 		$this_day_classes.='booked-am,';
+			// 		$this_date_state='BOOKED pm';
+			// 	}
+			// 	if($this_day_counter==11){
+			// 		$this_day_classes.='booked-pm,';
+			// 	}
+			// }
 			
 			// return date classes as array
 			if(!empty($this_day_classes)){

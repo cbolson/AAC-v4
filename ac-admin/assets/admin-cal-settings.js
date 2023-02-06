@@ -174,6 +174,14 @@ rangeChange = function (el) {
 styleInputs.forEach((field) => {
   var hueb = new Huebee(field, {
     hue0: 210,
+    notation: "hex",
+    customColors: [
+      "#046889",
+      "#8fd9f2",
+      "#ff9090",
+      "#ffcc00",
+      "#fdeeb3",
+    ],
   });
   hueb.on("change", function (color, hue, sat, lum) {
     changeStyle(field.id, color);

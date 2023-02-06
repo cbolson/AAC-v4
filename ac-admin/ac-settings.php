@@ -12,25 +12,28 @@ Use			: 	general calendar config options
 // DEFAULT COLORS - DO NOT REMOVE AS WE NEED TO INSERT THESE WITH THE INSTALL SCRIPT
 // if it all goes wrong you can un-comment these lines and then submit the form (via admin) to reset the defaults manually
 // $arr = [];
-// $arr["--ac-month-bg"] = "#FFFFFF";
-// $arr["--ac-month-title-bg"] = "#046889";
-// $arr["--ac-month-title-clr"] = "#FFFFFF";
-// $arr["--ac-weekday-bg"] 	= "#8fd9f2";
-// $arr["--ac-weekday-clr"] 	= "#000000";
-// $arr["--ac-day-bg"] 		= "#f0f0f0";
-// $arr["--ac-day-clr"] 		= "#000000";
-// $arr["--ac-day-clr-hover"] 	= "#ffa500";
-// $arr["--ac-weekend-bg"] 	= "#f0f0f0";
-// $arr["--ac-weekend-clr"] 	= "#000000";
-// $arr["--ac-nav-clr"] 		= "#046889";
-// $arr["--ac-nav-clr-hover"] 	= "#000000";
-// $arr["--ac-booked-bg"] 		= "#ff9090";
-// $arr["--ac-booked-clr"] 	= "#000000";
-// $arr["--ac-select-range"] 	= "#ffcc00";
-// $arr["--ac-select-between"] = "#fdeeb3";
-// $arr["--ac-border-radius"] = "10";
+// $arr['--ac-month-bg'] = "#FFFFFF";
+// $arr['--ac-month-title-bg'] = '#046889';
+// $arr['--ac-month-title-clr']= '#FFFFFF';
+// $arr['--ac-weekday-bg'] 	= '#8fd9f2';
+// $arr['--ac-weekday-clr'] 	= '#000000';
+// $arr['--ac-day-bg'] 		= '#f0f0f0';
+// $arr['--ac-day-clr'] 		= '#000000';
+// $arr['--ac-day-clr-hover'] 	= '#ffa500';
+// $arr['--ac-weekend-bg'] 	= '#f0f0f0';
+// $arr['--ac-weekend-clr'] 	= '#000000';
+// $arr['--ac-nav-clr'] 		= '#046889';
+// $arr['--ac-nav-clr-hover'] 	= '#000000';
+// $arr['--ac-booked-bg'] 		= '#ff9090';
+// $arr['--ac-booked-clr'] 	= '#000000';
+// $arr['--ac-select-range'] 	= '#ffcc00';
+// $arr['--ac-select-between'] = '#fdeeb3';
+// $arr['--ac-border-radius'] 	= "10";
 // $_POST["mod-styles"] = $arr;
 
+
+// echo addslashes(serialize($arr)); # for db insert in ac-install
+// exit();
 
 
 //	NOTE - $row_config is defined in the common file
