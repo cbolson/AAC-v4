@@ -177,5 +177,6 @@ styleInputs.forEach((field) => {
   });
   hueb.on("change", function (color, hue, sat, lum) {
     changeStyle(field.id, color);
+    hueb.close();
   });
 });
