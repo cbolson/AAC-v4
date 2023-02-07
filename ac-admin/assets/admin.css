@@ -391,6 +391,9 @@ input.slider::-moz-range-thumb {
 .button--green {
   background-color: green;
 }
+.button--red {
+  background-color: red;
+}
 .field-row {
   margin-bottom: 0.5rem;
 }
