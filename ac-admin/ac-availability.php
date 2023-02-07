@@ -66,7 +66,7 @@ if(count($arr_user_items)==0){
 			<div id="block-booking" style="margin-top:10px;">
 				<h2>_Reserve dates_</h2>
 				'.fieldRow($ac_lang["dates"] 	, ''		, '<input type="date" 	id="date-start" name="add[date-start]" value="" style="max-width:200px;" readonly="readonly"><input type="date" id="date-end" name="add[date-end]"  value=""style="max-width:200px;" readonly="readonly">').'
-				'.fieldRowButton('<button type="button" class="button button--small button--green" toggle-id="block-full-booking">_show_booking_details</button>').'
+				'.fieldRowButton('<button type="button" class="button button--small button--green" toggle-id="block-full-booking">'.$ac_lang["toggle_show_booking_details"].'</button>').'
 				<div id="block-full-booking" class="hidden">
 					'.fieldRow($ac_lang["name"] 	, 'name'	, '<input type="text" 	id="name"	name="add[name]"">').'
 					'.fieldRow($ac_lang["email"] 	, 'email'	, '<input type="email" 	id="email"	name="add[email]"">').'
