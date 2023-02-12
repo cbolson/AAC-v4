@@ -58,7 +58,6 @@ $data["start-date"]	= $start_year.'-'.$start_month.'-01'; # define start month f
 
 // get array of ALL dates in db within dates given (only call the db once)
 $arr_dates_booked	= getBookings($id_item,$start_month,$start_year,$numMonths,AC_LANG);
-
 // create the calendar
 $thisMonth	= $start_month;
 $thisYear	= $start_year;

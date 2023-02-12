@@ -7,6 +7,7 @@ File		: settings.ajax.php
 Date mod	: 2023-01-04
 Use			: get calendar settings such as styles and texts to be sent to js file for calendar settings
 */
+session_start();
 
 // get vars sent (GET)
 $lang = isset($_GET["lang"]) ? $_GET["lang"] : "en";
@@ -40,7 +41,11 @@ $arr_settings["texts"]=array(
 	"dates_not_available" 	=> $ac_lang["alert_dates_not_avail"]
 );
 $arr_settings["min_nights"] =AC_MIN_NIGHTS;
-
+if(isset($_SESSION["admin"])){
+	$arr_settings["min_nights"] =0; # allow single date selection for admin
+}else{
+	$arr_settings["min_nights"] =AC_MIN_NIGHTS;
+}
 // convert serialized styles to array ($row_config is defined in common.inc.php)
 $styles = unserialize($row_config["styles"]);
 foreach($styles AS $key=>$val){

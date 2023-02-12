@@ -53,31 +53,29 @@ if(!function_exists("getBookings")){
 		global $db_cal;
 		
 		//	get bookings for this month and item from database
+		/*
+		Booking states
+		0 = available (no state saved)
+		1 = booked pm (start)
+		2 = booked
+		3 = booked -am (end)
+		*/
 		$booked_days=array();
 		$sql = "
 		SELECT 
-			t1.the_date,
-			t2.class,
-			t2.id AS id_state
+		id_state,	
+		the_date
 		FROM 
-			".AC_TBL_AVAIL." AS t1
-			LEFT JOIN ".AC_TBL_STATES." AS t2 ON t2.id=t1.id_state
+			".AC_TBL_AVAIL."
 		WHERE 
-			t1.id_item				= ".mysqli_real_escape_string($db_cal,$id_item)." 
-			AND t1.the_date BETWEEN ('01-".$start_month."-".$start_year."') AND ('01-".$start_month."-".$start_year."'  + INTERVAL ".$num_months." MONTH)	
+			id_item	= ".mysqli_real_escape_string($db_cal,$id_item)." 
+			AND the_date BETWEEN ('".$start_year."-".$start_month."-01') AND ('".$start_year."-".$start_month."-01'  + INTERVAL ".$num_months." MONTH)	
 		";
-		/*
-			AND MONTH(t1.the_date)	= ".mysqli_real_escape_string($db_cal,$month)." 
-			AND YEAR(t1.the_date)	= ".mysqli_real_escape_string($db_cal,$year)."
-		*/
 		//echo $sql;
 		//exit();
 		$res=mysqli_query($db_cal,$sql) or die("ERROR checking id item availability dates");
 		while($row=mysqli_fetch_assoc($res)){
-			$booked_days[$row["the_date"]]=array(
-				"class"=>$row["class"],
-				"state"=>$row["id_state"]
-			);
+			$booked_days[$row["the_date"]][]=$row["id_state"];
 		}
 		return $booked_days;
 	}
@@ -144,14 +142,14 @@ if(!function_exists("drawCalJSON")){
 			$last_month_start_num= date('d', strtotime('previous monday', strtotime($start_month_db)));
 			
 			for($k = $last_month_start_num; $k <= $last_month_last_day; ++$k){  
-				// format date as string 
-				$date_str=date2string($last_year.'-'.$last_month.'-'.$last_month_start_num);
 				// add date to array
 				$arr_month["days"][]=array(
-					'n'	=> $last_month_start_num,
-					'd'	=> ''.$date_str.'',
-					's'	=> '',
-					'c'	=> array('empty')
+					'n'		=> $last_month_start_num,
+					'df' 	=> '',
+					'd'		=> date2string($last_year.'-'.$last_month.'-'.$last_month_start_num),
+					's'		=> '',
+					'c'		=> array('empty'),
+					'da' => 0
 				);
 				++$last_month_start_num;
 				++$week_day;
@@ -162,9 +160,9 @@ if(!function_exists("drawCalJSON")){
 		for($this_day_counter = 1; $this_day_counter <= $start_month_num_days; $this_day_counter++){
 			//	reset xtra classes for each day
 			//	note - these classes acumulate for each day according to state, current and clickable
-			$this_day_classes	= 'available,';
+			$this_day_classes	= [];
 			$this_date_state	= '';
-			
+
 			
 			//	turn date into timestamp for comparison with current timestamp (defined as constant in common.inc.php)
 			$date_timestamp =   mktime(0,0,0, $start_month,($this_day_counter),$start_year);
@@ -175,53 +173,50 @@ if(!function_exists("drawCalJSON")){
 			// default date classes (eg. today, past)
 			if($date_timestamp==CUR_DATE){
 				// current date
-				$this_day_classes.='today,';
+				$this_day_classes[] ='today,';
 			}elseif($date_timestamp<CUR_DATE){
 				// past date
-				$this_day_classes.='past,';	#add "past" class to be modified via mootools if required
+				$this_day_classes[]='past,';	#add "past" class to be modified via mootools if required
 			}
 			
 			//Get the day of the week using PHP's date function.
 			$day_of_week = getDateDayNumber($date_db);
 			if(in_array($day_of_week,$arr_weekend)){
 				// weekend
-				$this_day_classes.='weekend,';
+				$this_day_classes[] ='weekend,';
 			}
-			
+			 
 			//	add date state if retrieved from db
 			if(array_key_exists($date_db,$arr_dates_booked)){
-				$this_day_classes.=$arr_dates_booked[$date_db]["state"].',';
-				$this_date_state	= $arr_dates_booked["state"];
+				if(count($arr_dates_booked[$date_db])>1){
+					// booked booked pm & am - mark as booked
+					$this_date_state	= "booked";
+				}else{
+					$date_state =  $arr_dates_booked[$date_db][0];
+					switch($date_state){
+						case 1: $this_date_state = "booked-pm"; break;
+						case 2: $this_date_state = "booked"; break;
+						case 3: $this_date_state = "booked-am"; break;
+					}
+				}
+				// define if date bookable
+				if($this_date_state=="booked") 	$date_available = "0"; # this date can NOT be selected for booking etc.	
+				else 							$date_available = "1";
+				
+				$this_day_classes[] = $this_date_state;
+				//echo "<br>".$date_db.": ".$this_day_classes;
+			}else{
+				// do we actually need this class ?
+				$this_day_classes[] = 'available';
 			}
-		
-			// FOR TESTING
-			// this test forces several days to be marked as booked 
 
-			// if($start_month==date("m", strtotime('+2 months'))){
-			// 	//if($this_day_counter==12){
-			// 	if( ($this_day_counter >11) && ($this_day_counter <14)){
-			// 		$this_day_classes.='booked,';
-			// 		$this_date_state='BOOKED';
-			// 	}
-			// 	if($this_day_counter==14){
-			// 		$this_day_classes.='booked-am,';
-			// 		$this_date_state='BOOKED pm';
-			// 	}
-			// 	if($this_day_counter==11){
-			// 		$this_day_classes.='booked-pm,';
-			// 	}
-			// }
-			
-			// return date classes as array
-			if(!empty($this_day_classes)){
-				$this_day_classes=explode(',',trim($this_day_classes,','));
-			}
 			$arr_month["days"][]=array(
-				'n'	=> ''.$this_day_counter.'',		# this date number
-				'df'=> ''.$date_db.'',			# db date format
-				'ds'=> ''.date2string($date_db).'', # format date as string 
-				's'	=> ''.$this_date_state.'',		# local lang date state (from db)
-				'c'	=> $this_day_classes			# date css classes
+				'n'	=> $this_day_counter,		# this date number
+				'df'=> $date_db,				# db date format
+				'ds'=> date2string($date_db), 	# format date as string 
+				's'	=> $this_date_state,		# local lang date state (from db)
+				'c'	=> $this_day_classes,		# date css classes
+				'da' => $date_available
 			);
 			
 			if($week_day % 7==0){
@@ -248,13 +243,15 @@ if(!function_exists("drawCalJSON")){
 			//add days until we have 6 rows
 			while($week_day<=7){
 				// ad next month day to array
-				$date_str=date2string($next_year.'-'.$next_month.'-'.$next_month_day);
+				$date_str	= date2string($next_year.'-'.$next_month.'-'.$next_month_day);
+				
 				$arr_month["days"][]=array(
 					'n'	=> $next_month_day,
-					'df'	=> ''.$date_db.'',
-					'ds'	=> ''.$date_str.'',
+					'df'=> '',
+					'ds'=> ''.$date_str.'',
 					's'	=> '',
-					'c'	=> array('empty')
+					'c'	=> array('empty'),
+					'da' => 0
 				);
 				++$next_month_day;  
 				++$week_day;

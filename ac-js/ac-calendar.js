@@ -275,6 +275,7 @@ function drawCal(data) {
       let dateNumFormat = days[j].df;
       let dateNumTitle = days[j].ds;
       let dateNumState = days[j].s;
+      let dateAttrAvail = days[j].da;
 
       if (dateNumState) {
         // add date state if defined
@@ -283,6 +284,7 @@ function drawCal(data) {
       dateNum.setAttribute("title", dateNumTitle);
       dateNum.setAttribute("id", "date_" + dateNumFormat);
       dateNum.setAttribute("data-date", dateNumFormat);
+      dateNum.setAttribute("date-avail", dateAttrAvail);
       // add date classes
       for (let cl = 0; cl < dateNumClass.length; cl++) {
         dateNum.classList.add("" + dateNumClass[cl] + "");
@@ -321,7 +323,7 @@ function activateDates() {
     fieldDateEnd = document.querySelector(`#${idDateEnd}`);
 
     // get all items with update-state class
-    clickableDates = acContainer.querySelectorAll(".available");
+    clickableDates = acContainer.querySelectorAll(`[date-avail="1"]`);
     // add click event to state elements
     clickableDates.forEach((d) => {
       d.addEventListener("click", setDate);
@@ -340,7 +342,7 @@ function dateNotAvail(el) {
 function clearRangeStyles(removeStartDate = true) {
   if (removeStartDate) {
     // remove all (reset)
-    clickableDates.forEach((d) => {
+    acContainer.querySelectorAll(".ac-days li").forEach((d) => {
       d.classList.remove(
         "date-select-start-pm",
         "date-select-start-pm-booked",
@@ -414,6 +416,7 @@ function setDate() {
         if (strDate > startDate && strDate < dateSelected) {
           // get date element from month
           let betweenDate = acContainer.querySelector(`#date_${strDate}`);
+          console.log(betweenDate);
           if (betweenDate.classList.contains("booked")) {
             // date already booked - alert and reset
             return dateNotAvail(betweenDate);
@@ -421,7 +424,7 @@ function setDate() {
             addClass(betweenDate, "date-select-between");
           }
         }
-        // move date foward by one day
+        // move date forward by one day
         dateMove.setDate(dateMove.getDate() + 1);
       }
 
@@ -459,9 +462,9 @@ function highlightDates() {
         // move date foward by one day
         dateMove.setDate(dateMove.getDate() + 1);
       }
-      this.classList.contains("booked-pm")
-        ? addClass(this, "date-select-end-am")
-        : addClass(this, "date-select-end");
+      // this.classList.contains("booked-pm")
+      //   ? addClass(this, "date-select-end-am")
+      //   : addClass(this, "date-select-end");
     }
   }
 }

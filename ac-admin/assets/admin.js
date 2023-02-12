@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const elToggle = document.querySelector(`#${idToggle}`);
       elToggle.classList.toggle("hidden");
 
-      fields = elToggle.querySelectorAll("input");
+      fields = elToggle.querySelectorAll("input,textarea");
       if (elToggle.classList.contains("hidden")) {
         // need to disable form fields to prevent them from being submitted
         fields.forEach((field) => field.setAttribute("disabled", true));

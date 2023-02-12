@@ -17,7 +17,8 @@ ini_set("display_errors", 1);
 
 //	define tables
 define("AC_TBL_CONFIG"				, AC_DB_PREFIX."ac_config");				# general config
-define("AC_TBL_AVAIL"				, AC_DB_PREFIX."ac_availability"); 			# bookings dates
+define("AC_TBL_AVAIL"				, AC_DB_PREFIX."ac_availability"); 			# general config
+define("AC_TBL_BOOKINGS"			, AC_DB_PREFIX."ac_bookings"); 			# bookings dates
 define("AC_TBL_USERS"				, AC_DB_PREFIX."ac_users");					# admin users
 define("AC_TBL_STATES"				, AC_DB_PREFIX."ac_states");				# booking types (am, pm, etc)
 define("AC_TBL_ITEMS"				, AC_DB_PREFIX."ac_items");					# calendar items
