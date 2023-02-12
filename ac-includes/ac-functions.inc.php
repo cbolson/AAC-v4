@@ -162,7 +162,7 @@ if(!function_exists("drawCalJSON")){
 			//	note - these classes acumulate for each day according to state, current and clickable
 			$this_day_classes	= [];
 			$this_date_state	= '';
-
+			$date_available = "1";
 			
 			//	turn date into timestamp for comparison with current timestamp (defined as constant in common.inc.php)
 			$date_timestamp =   mktime(0,0,0, $start_month,($this_day_counter),$start_year);
@@ -201,7 +201,6 @@ if(!function_exists("drawCalJSON")){
 				}
 				// define if date bookable
 				if($this_date_state=="booked") 	$date_available = "0"; # this date can NOT be selected for booking etc.	
-				else 							$date_available = "1";
 				
 				$this_day_classes[] = $this_date_state;
 				//echo "<br>".$date_db.": ".$this_day_classes;
