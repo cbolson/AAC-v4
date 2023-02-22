@@ -417,11 +417,13 @@ function setDate() {
           // get date element from month
           let betweenDate = acContainer.querySelector(`#date_${strDate}`);
           console.log(betweenDate);
-          if (betweenDate.classList.contains("booked")) {
-            // date already booked - alert and reset
-            return dateNotAvail(betweenDate);
-          } else {
-            addClass(betweenDate, "date-select-between");
+          if (betweenDate != null) {
+            if (betweenDate.classList.contains("booked")) {
+              // date already booked - alert and reset
+              return dateNotAvail(betweenDate);
+            } else {
+              addClass(betweenDate, "date-select-between");
+            }
           }
         }
         // move date forward by one day
